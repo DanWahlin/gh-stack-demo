@@ -235,7 +235,7 @@ repository.
 Before starting, verify:
 
 - Git is installed.
-- Node.js 20 or newer is installed.
+- Node.js LTS or newer is installed.
 - GitHub CLI is installed and authenticated.
 - git user.name and user.email are configured.
 - gh stack is available. If it is not available, install it with:
