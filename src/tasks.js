@@ -5,3 +5,7 @@ export function createTask(title) {
     completed: false,
   };
 }
+
+export function isValidTask(task) {
+  return Boolean(task?.title?.trim());
+}
