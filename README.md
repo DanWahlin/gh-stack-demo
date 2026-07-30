@@ -8,7 +8,7 @@ A tiny Node.js task API built as three focused pull requests to demonstrate [Git
 
 ## Presentation
 
-[Download the latest PowerPoint deck](https://github.com/DanWahlin/gh-stack-demo/raw/refs/heads/main/github-stacked-prs.pptx). It includes the challenge, high-level concept, CLI workflow, and a validated start-to-finish terminal example.
+Need to bring your team up to speed on GitHub Stacked PRs? [Download the latest PowerPoint deck](https://github.com/DanWahlin/gh-stack-demo/raw/refs/heads/main/github-stacked-prs.pptx) to use for a quick presentation. It includes the challenge stacked PRs address, high-level concept, CLI workflow, and a start-to-finish terminal example.
 
 ## Planned stack
 
