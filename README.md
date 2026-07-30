@@ -4,7 +4,7 @@
   <img src="images/gh-stack-demo.png" alt="Three dependent pull requests shown as a stack" width="350" height="344">
 </p>
 
-A tiny Node.js task API built as three focused pull requests to demonstrate GitHub's Stacked PRs feature and the `gh stack` CLI extension.
+A tiny Node.js task API built as three focused pull requests to demonstrate [GitHub's Stacked PRs feature](https://docs.github.com/pull-requests/how-tos/stacked-pull-requests) and the `gh stack` CLI extension.
 
 ## Presentation
 
