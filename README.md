@@ -20,7 +20,7 @@ Each PR targets the branch below it, so reviewers see only that layer's changes.
 
 ## Requirements
 
-- Node.js 20 or newer
+- Node.js LTS
 - GitHub CLI 2.0 or newer
 - [`github/gh-stack`](https://github.com/github/gh-stack)
 
