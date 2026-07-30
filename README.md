@@ -201,6 +201,96 @@ gh stack submit --auto --open
 
 This exact flow was independently executed and verified in [`DanWahlin/gh-stack-demo-validated`](https://github.com/DanWahlin/gh-stack-demo-validated).
 
+### Create the demo with an AI coding agent
+
+If you want to quickly create your own sample repository, run the following prompt with your favorite AI coding tool. The agent needs terminal access, an authenticated GitHub CLI, and permission to create repositories.
+
+```text
+Create a working GitHub Stacked PRs sample based on this repository:
+
+https://github.com/DanWahlin/gh-stacked-prs-demo
+
+You are authorized to create one new public repository in my currently
+authenticated GitHub account and open three pull requests. Leave all pull
+requests open. Do not modify the source repository.
+
+Use the live README in the source repository as the source of truth:
+
+1. Retrieve the README from the main branch.
+2. Find the section titled "Commands used to create this demo."
+3. Read the entire section before making changes.
+4. Follow that process from start to finish rather than relying on your
+   existing knowledge of gh stack.
+
+Create the new repository in a separate, empty directory.
+
+Use this repository name:
+
+gh-stacked-prs-demo-copy
+
+If that name already exists in my GitHub account, append a short timestamp
+to make it unique. Do not delete, overwrite, rename, or reuse an existing
+repository.
+
+Before starting, verify:
+
+- Git is installed.
+- Node.js 20 or newer is installed.
+- GitHub CLI is installed and authenticated.
+- git user.name and user.email are configured.
+- gh stack is available. If it is not available, install it with:
+  gh extension install github/gh-stack
+
+Then execute the README workflow to:
+
+- Create and publish the main branch.
+- Create feature/task-model as the bottom stack layer.
+- Create feature/task-validation as the middle layer.
+- Create test/task-model as the top layer.
+- Commit the focused change on each branch.
+- Run the Node.js tests.
+- Inspect the local stack.
+- Submit all three pull requests with:
+  gh stack submit --auto --open
+
+Do not:
+
+- Modify the source repository.
+- Merge or close any pull request.
+- Force-push or rewrite Git history.
+- Delete any repository or branch.
+- Substitute ordinary gh pr create commands for gh stack submit.
+- Claim success without checking the live GitHub repository.
+
+After submission, verify all of the following:
+
+1. The tests pass.
+2. The branch ancestry is:
+   main
+   └── feature/task-model
+       └── feature/task-validation
+           └── test/task-model
+3. PR #1 targets main from feature/task-model.
+4. PR #2 targets feature/task-model from feature/task-validation.
+5. PR #3 targets feature/task-validation from test/task-model.
+6. All three PRs are open and ready for review, not drafts.
+7. gh stack view shows the three PRs as one linked stack.
+8. Each PR contains only its intended focused change.
+
+When finished, return:
+
+- The new repository URL.
+- The GitHub stack number.
+- Links to all three pull requests.
+- The test result.
+- The verified base and head branch for each PR.
+- Any deviations from the source README or blockers encountered.
+
+If a required tool, authentication, or permission is unavailable, stop and
+report the exact blocker. Do not fabricate commands, URLs, test results, or
+GitHub state.
+```
+
 ## Useful commands after submission
 
 ```sh
