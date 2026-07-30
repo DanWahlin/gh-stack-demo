@@ -1,14 +1,14 @@
 # GitHub Stacked PRs Demo
 
 <p align="center">
-  <img src="images/gh-stack-demo.png" alt="Three dependent pull requests shown as a stack" width="350" height="344">
+  <img src="images/gh-stacked-prs-demo.png" alt="Three dependent pull requests shown as a stack" width="350" height="344">
 </p>
 
 A tiny Node.js task API built as three focused pull requests to demonstrate [GitHub's Stacked PRs feature](https://docs.github.com/pull-requests/how-tos/stacked-pull-requests) and the `gh stack` CLI extension.
 
 ## Presentation
 
-Need to bring your team up to speed on GitHub Stacked PRs? [Download the latest PowerPoint deck](https://github.com/DanWahlin/gh-stack-demo/raw/refs/heads/main/github-stacked-prs.pptx) to use for a quick presentation. It includes the challenge stacked PRs address, high-level concept, CLI workflow, and a start-to-finish terminal example.
+Need to bring your team up to speed on GitHub Stacked PRs? [Download the latest PowerPoint deck](https://github.com/DanWahlin/gh-stacked-prs-demo/raw/refs/heads/main/github-stacked-prs.pptx) to use for a quick presentation. It includes the challenge stacked PRs address, high-level concept, CLI workflow, and a start-to-finish terminal example.
 
 ## Planned stack
 
@@ -51,7 +51,7 @@ The commands use Bash or Zsh syntax. Before starting:
 
 ```sh
 OWNER="$(gh api user --jq .login)"
-REPO="gh-stack-demo-copy" # Change this if the name already exists.
+REPO="gh-stacked-prs-demo-copy" # Change this if the name already exists.
 
 # Install the extension only when it is not already available.
 if ! gh stack --version >/dev/null 2>&1; then
@@ -77,7 +77,7 @@ EOF
 
 cat > package.json <<'EOF'
 {
-  "name": "gh-stack-demo",
+  "name": "gh-stacked-prs-demo",
   "version": "1.0.0",
   "private": true,
   "description": "A tiny Node.js API for demonstrating GitHub Stacked PRs",
