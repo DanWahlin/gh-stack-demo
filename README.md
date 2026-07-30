@@ -20,72 +20,154 @@ Each PR targets the branch below it, so reviewers see only that layer's changes.
 - GitHub CLI 2.0 or newer
 - [`github/gh-stack`](https://github.com/github/gh-stack)
 
+Verify the extension is available:
+
+```sh
+gh stack --version
+```
+
+If that command is unavailable, install the extension once:
+
 ```sh
 gh extension install github/gh-stack
 ```
 
 ## Commands used to create this demo
 
-The following is the actual command sequence used to create this repository and its three stacked pull requests. Run it from the directory where you want the repository created. Replace `DanWahlin` if you are using a different GitHub account.
+The sequence below is a complete, tested reproduction of this repository's three-PR stack. It creates every required file, publishes `main`, builds each layer, runs the tests, and submits the stack. It was validated with Node.js 24.18.0, Git 2.43.0, GitHub CLI 2.96.0, and `gh stack` 0.1.0.
 
-### 1. Create and publish the repository
+The commands use Bash or Zsh syntax. Before starting:
+
+- Run `gh auth status` and confirm that GitHub CLI is authenticated.
+- Confirm that `git config user.name` and `git config user.email` return your Git identity.
+- Choose a repository name that does not already exist in your GitHub account.
+- Run the sequence from the directory where you want the new repository folder created.
+
+### 1. Set the repository name and verify `gh stack`
 
 ```sh
-mkdir gh-stack-demo
-cd gh-stack-demo
+OWNER="$(gh api user --jq .login)"
+REPO="gh-stack-demo-copy" # Change this if the name already exists.
+
+# Install the extension only when it is not already available.
+if ! gh stack --version >/dev/null 2>&1; then
+  gh extension install github/gh-stack
+fi
+```
+
+Avoid adding `--force` to the installation command. A forced upgrade depends on GitHub being able to resolve the latest extension release and is unnecessary when `gh stack` is already installed.
+
+### 2. Create and publish `main`
+
+```sh
+mkdir "$REPO"
+cd "$REPO"
 
 git init -b main
+
+cat > README.md <<'EOF'
+# GitHub Stacked PRs Demo
+
+A tiny Node.js project built as three focused stacked pull requests.
+EOF
+
+cat > package.json <<'EOF'
+{
+  "name": "gh-stack-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A tiny Node.js API for demonstrating GitHub Stacked PRs",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
+EOF
+
 git add README.md package.json
 git commit -m "chore: scaffold stacked PR demo"
 
-gh repo create DanWahlin/gh-stack-demo \
+gh repo create "$OWNER/$REPO" \
   --public \
   --source=. \
   --remote=origin \
   --push
 ```
 
-At this point, the repository has a published `main` branch. Install the extension once if it is not already available:
+Publishing `main` before initializing the stack gives `gh stack` a remote and a default trunk branch to detect.
 
-```sh
-gh extension install github/gh-stack
-```
+### 3. Create the bottom layer: task model
 
-### 2. Create the bottom layer: task model
-
-`gh stack init` creates the first stack branch from `main` and checks it out.
+`gh stack init` creates `feature/task-model` from `main`, records it as the first layer, and checks it out.
 
 ```sh
 gh stack init feature/task-model
 
-# Create src/tasks.js with the task model, then commit it.
+mkdir -p src
+cat > src/tasks.js <<'EOF'
+export function createTask(title) {
+  return {
+    id: crypto.randomUUID(),
+    title,
+    completed: false,
+  };
+}
+EOF
+
 git add src/tasks.js
 git commit -m "feat: add task model"
 ```
 
-### 3. Add the middle layer: validation
+### 4. Add the middle layer: validation
 
-`gh stack add` creates and checks out a branch on top of the current layer.
+`gh stack add` creates the next branch from the current top layer and checks it out.
 
 ```sh
 gh stack add feature/task-validation
 
-# Add title validation to src/tasks.js, then commit it.
+cat >> src/tasks.js <<'EOF'
+
+export function isValidTask(task) {
+  return Boolean(task?.title?.trim());
+}
+EOF
+
 git add src/tasks.js
 git commit -m "feat: validate task titles"
 ```
 
-### 4. Add the top layer: tests
+### 5. Add the top layer: tests
 
 ```sh
 gh stack add test/task-model
 
-# Create test/tasks.test.js, then commit it.
+mkdir -p test
+cat > test/tasks.test.js <<'EOF'
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createTask, isValidTask } from '../src/tasks.js';
+
+test('creates a valid task', () => {
+  const task = createTask('Ship the demo');
+
+  assert.equal(task.title, 'Ship the demo');
+  assert.equal(task.completed, false);
+  assert.equal(isValidTask(task), true);
+});
+
+test('rejects a task with an empty title', () => {
+  assert.equal(isValidTask(createTask('   ')), false);
+});
+EOF
+
 git add test/tasks.test.js
 git commit -m "test: cover task creation and validation"
 ```
 
-The resulting local branch chain is:
+The local branch chain is now:
 
 ```text
 main
@@ -94,7 +176,7 @@ main
         └── test/task-model
 ```
 
-### 5. Verify and submit the stack
+### 6. Test, inspect, and submit
 
 ```sh
 npm test
@@ -102,20 +184,18 @@ gh stack view
 gh stack submit --auto --open
 ```
 
-The final command performed all of the GitHub-side setup in one operation:
+`gh stack submit --auto --open` performs the GitHub-side work in one operation:
 
-1. Pushed all three branches.
-2. Created PR #1 with `main` as its base.
-3. Created PR #2 with `feature/task-model` as its base.
-4. Created PR #3 with `feature/task-validation` as its base.
-5. Linked the three PRs as one GitHub stack.
-6. Marked the PRs ready for review rather than drafts.
+1. Pushes all three branches.
+2. Creates PR #1 from `feature/task-model` into `main`.
+3. Creates PR #2 from `feature/task-validation` into `feature/task-model`.
+4. Creates PR #3 from `test/task-model` into `feature/task-validation`.
+5. Links the three PRs as one GitHub stack.
+6. Marks all three PRs ready for review rather than draft.
 
-The `--auto` flag skipped the interactive editor and generated PR titles from the commits. The `--open` flag made the PRs ready for review. For an interactive run where you edit each title, description, and draft state before submission, use this instead:
+`--auto` skips the interactive editor and derives PR titles from the commits. `--open` is important with `--auto` because automatically submitted PRs otherwise default to drafts. To edit each title, description, and draft state interactively, use `gh stack submit` without those flags.
 
-```sh
-gh stack submit
-```
+This exact flow was independently executed and verified in [`DanWahlin/gh-stack-demo-validated`](https://github.com/DanWahlin/gh-stack-demo-validated).
 
 ## Useful commands after submission
 
