@@ -5,19 +5,19 @@
 
 ## Script and shot list
 
-### 0:00–0:18 | Hook
+### 0:00–0:25 | The challenge
 
 **On camera**
 
-> Ever open one giant pull request that mixes a data model, validation, and tests? Reviewers have to understand everything at once. GitHub's new Stacked PRs feature lets you split that work into small pull requests without waiting for each one to merge before starting the next.
+> A large feature creates an awkward choice. Open one giant pull request and reviewers have to understand the model, validation, and tests all at once. Or split it into small pull requests, but wait for each one to merge before building the next dependent piece. The first option slows review; the second slows development.
 
-### 0:18–0:35 | The mental model
+### 0:25–0:45 | The solution and mental model
 
 **Show the three-branch diagram in this README or run `git log --oneline --graph --all`.**
 
-> Think of it as a stack of dependent branches. The bottom PR targets `main`, the next PR targets that first branch, and the third targets the second. That means every review shows only one focused layer, while GitHub still displays the entire stack.
+> Stacked PRs give you a third option: small, dependent pull requests that can be developed together and reviewed separately. The bottom PR targets `main`, and each PR above targets the branch below it. Reviewers get a focused diff for each layer, while GitHub preserves the order and displays the whole stack.
 
-### 0:35–0:50 | Install
+### 0:45–1:00 | Install
 
 **Terminal**
 
@@ -28,7 +28,7 @@ gh stack --version
 
 > It's delivered as an official GitHub CLI extension. You need an authenticated GitHub CLI and a repository you can push to.
 
-### 0:50–1:28 | Build the stack
+### 1:00–1:35 | Build the stack
 
 **Use the prepared repository. Show the commands, but don't type or explain every code edit.**
 
@@ -47,7 +47,7 @@ gh stack view
 
 > `gh stack init` creates the first layer. After I commit the task model, `gh stack add` creates the next branch directly on top. I repeat that for validation and tests. `gh stack view` shows the order from `main` to the top of the stack, and navigation commands such as `up`, `down`, `top`, and `bottom` move between layers.
 
-### 1:28–1:50 | Submit
+### 1:35–1:55 | Submit
 
 **Terminal**
 
@@ -57,13 +57,13 @@ gh stack submit
 
 > One submit command pushes the branches, creates the pull requests with the correct base branches, and links them as a Stack on GitHub. The interactive editor lets you set each title, description, and draft status before submitting.
 
-### 1:50–2:18 | The payoff in GitHub
+### 1:55–2:20 | The payoff in GitHub
 
 **Browser: open PR #3, point to the stack map, then the Files changed tab. Jump to PR #1 using the map.**
 
-> Here's the payoff. GitHub adds a stack map to every pull request, so reviewers can jump between layers. This test PR shows only the tests, not the model and validation changes below it. Each PR is reviewed independently, but the full sequence stays visible.
+> Here's the payoff. Instead of reviewing one large, mixed change, each reviewer gets one focused diff. This test PR shows only the tests, not the model and validation below it. GitHub's stack map keeps the dependency order visible and lets reviewers jump between layers, so smaller PRs don't lose the context of the larger feature.
 
-### 2:18–2:40 | Keeping it current and merging
+### 2:20–2:42 | Keeping it current and merging
 
 **Terminal, then briefly show the merge box without merging.**
 
@@ -76,11 +76,11 @@ gh stack merge
 
 > If a lower layer changes, `gh stack rebase` cascades that change through the branches and `gh stack push` updates them safely. When the stack is ready, merge the top PR to land the entire stack from bottom to top, or merge a lower PR to land only that portion.
 
-### 2:40–2:52 | Close
+### 2:42–2:57 | Close
 
 **On camera**
 
-> The big win is smaller reviews without serial development. I’ve linked this demo repository and GitHub's Stacked PRs docs so you can try it yourself.
+> That's the problem Stacked PRs solve: developers can keep moving on dependent work while reviewers get smaller, clearer changes. You avoid both the giant PR and the stop-and-wait workflow. I’ve linked this demo repository and GitHub's docs so you can try it yourself.
 
 ## Recording runbook
 
