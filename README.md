@@ -31,7 +31,7 @@ mkdir gh-stack-demo
 cd gh-stack-demo
 
 git init -b main
-git add README.md VIDEO.md package.json
+git add README.md package.json
 git commit -m "chore: scaffold stacked PR demo"
 
 gh repo create DanWahlin/gh-stack-demo \
@@ -135,5 +135,3 @@ gh stack rebase
 # Interactively land all or part of the stack.
 gh stack merge
 ```
-
-See [`VIDEO.md`](VIDEO.md) for the sub-three-minute script and recording runbook.
