@@ -1,0 +1,13 @@
+<!doctype html><html><head><style>
+html{background:#0d1117}*{box-sizing:border-box}body{width:720pt;height:405pt;margin:0;display:flex;flex-direction:column;background:#0d1117;color:#f0f6fc;font-family:Arial;padding:30pt 38pt}.eyebrow{color:#58a6ff;font-size:11pt;font-weight:bold;letter-spacing:1.5pt;margin:0 0 7pt}h1{font-size:31pt;line-height:1.05;margin:0}h2{font-size:16pt;color:#b1bac4;font-weight:normal;margin:7pt 0 22pt}.flow{display:flex;align-items:stretch;gap:10pt;height:205pt}.step{flex:1;background:#161b22;border:1.5pt solid #30363d;border-radius:12pt;padding:15pt;display:flex;flex-direction:column}.stepnum{width:27pt;height:27pt;background:#1f6feb;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:11pt}.stepnum p{font-size:13pt;font-weight:bold;margin:0}.step h3{font-size:17pt;margin:0 0 8pt}.step p{font-size:11.5pt;line-height:1.22;color:#b1bac4;margin:0}.cmd{margin-top:auto;background:#010409;border:1pt solid #30363d;border-radius:6pt;padding:9pt}.cmd p{font-family:'Courier New';font-size:10.5pt;color:#79c0ff;margin:0}.connector{width:18pt;display:flex;align-items:center;justify-content:center}.connector p{font-size:22pt;color:#3fb950;margin:0}.outcome{margin-top:14pt;background:#122117;border-left:5pt solid #3fb950;padding:10pt 14pt}.outcome p{font-size:14pt;margin:0;color:#d2f4d5}.outcome b{color:#56d364}
+</style></head><body>
+<p class="eyebrow">THE WORKFLOW</p><h1>From branches to one visible stack</h1><h2>The CLI handles branch order, pull-request bases, rebases, and merging.</h2>
+<div class="flow">
+ <div class="step"><div class="stepnum"><p>1</p></div><h3>Create layers</h3><p>Start the stack, then add one branch per reviewable concern.</p><div class="cmd"><p>gh stack init<br>gh stack add</p></div></div>
+ <div class="connector"><p>→</p></div>
+ <div class="step"><div class="stepnum"><p>2</p></div><h3>Submit once</h3><p>Push branches, create correctly based PRs, and link the stack.</p><div class="cmd"><p>gh stack submit</p></div></div>
+ <div class="connector"><p>→</p></div>
+ <div class="step"><div class="stepnum"><p>3</p></div><h3>Review + land</h3><p>Navigate focused diffs, update dependents, then merge bottom to top.</p><div class="cmd"><p>gh stack rebase<br>gh stack merge</p></div></div>
+</div>
+<div class="outcome"><p><b>The result:</b> smaller reviews without serial development.</p></div>
+</body></html>

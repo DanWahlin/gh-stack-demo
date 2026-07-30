@@ -1,0 +1,11 @@
+<!doctype html><html><head><style>
+html{background:#0d1117}*{box-sizing:border-box}body{width:720pt;height:405pt;margin:0;display:flex;flex-direction:column;background:#0d1117;color:#f0f6fc;font-family:Arial;padding:30pt 38pt}.eyebrow{color:#3fb950;font-size:11pt;font-weight:bold;letter-spacing:1.5pt;margin:0 0 7pt}h1{font-size:31pt;line-height:1.05;margin:0}h2{font-size:16pt;color:#b1bac4;font-weight:normal;margin:7pt 0 20pt}.diagram{display:flex;align-items:center;justify-content:center;gap:9pt;height:185pt}.branch{width:143pt;height:122pt;background:#161b22;border:1.5pt solid #30363d;border-radius:12pt;padding:15pt;display:flex;flex-direction:column}.branch h3{font-size:17pt;margin:0 0 5pt}.branch p{font-family:'Courier New';font-size:10.5pt;margin:0;color:#8b949e}.branch .diff{font-family:Arial;font-size:12pt;color:#c9d1d9;margin-top:auto}.trunk{border-color:#58a6ff;border-top:6pt solid #58a6ff}.layer{border-color:#3fb950;border-top:6pt solid #3fb950}.arrow{width:25pt;text-align:center}.arrow p{font-size:25pt;color:#6e7681;margin:0}.benefits{display:flex;gap:12pt;margin-top:11pt}.benefit{flex:1;background:#122117;border:1pt solid #238636;border-radius:8pt;padding:10pt 12pt}.benefit p{font-size:12.5pt;line-height:1.16;margin:0;color:#d2f4d5}.benefit b{color:#56d364}
+</style></head><body>
+<p class="eyebrow">THE THIRD OPTION</p><h1>Develop together. Review separately.</h1><h2>Each pull request depends on the branch below it, but exposes only its own focused diff.</h2>
+<div class="diagram">
+ <div class="branch trunk"><h3>PR #1</h3><p>base: main</p><p class="diff">Task model</p></div><div class="arrow"><p>→</p></div>
+ <div class="branch layer"><h3>PR #2</h3><p>base: PR #1</p><p class="diff">Validation</p></div><div class="arrow"><p>→</p></div>
+ <div class="branch layer"><h3>PR #3</h3><p>base: PR #2</p><p class="diff">Tests</p></div>
+</div>
+<div class="benefits"><div class="benefit"><p><b>Developers keep moving</b><br>on dependent work</p></div><div class="benefit"><p><b>Reviewers see less</b><br>in each focused diff</p></div><div class="benefit"><p><b>GitHub keeps context</b><br>with the stack map</p></div></div>
+</body></html>
