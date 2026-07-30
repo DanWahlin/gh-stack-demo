@@ -1,0 +1,16 @@
+<!doctype html><html><head><style>
+html{background:#0d1117}*{box-sizing:border-box}body{width:720pt;height:405pt;margin:0;display:flex;flex-direction:column;background:#0d1117;color:#f0f6fc;font-family:Arial;padding:28pt 38pt}.eyebrow{color:#58a6ff;font-size:11pt;font-weight:bold;letter-spacing:1.5pt;margin:0 0 6pt}h1{font-size:28pt;line-height:1.05;margin:0}h2{font-size:14pt;color:#b1bac4;font-weight:normal;margin:6pt 0 15pt}.terminal{height:260pt;background:#010409;border:1.5pt solid #30363d;border-radius:10pt;display:flex;flex-direction:column;overflow:hidden}.bar{height:28pt;background:#161b22;border-bottom:1pt solid #30363d;display:flex;align-items:center;padding:0 11pt}.dots{display:flex;gap:6pt}.dot{width:7pt;height:7pt;border-radius:50%}.red{background:#ff7b72}.yellow{background:#d29922}.green{background:#3fb950}.bar p{font-family:'Courier New';font-size:9.5pt;color:#8b949e;margin:0 auto}.code{padding:11pt 16pt;display:flex;gap:20pt;flex:1}.col{width:50%}.col p{font-family:'Courier New';font-size:9.6pt;line-height:1.3;color:#c9d1d9;margin:0 0 2pt}.col .comment{color:#8b949e}.col .cmd{color:#79c0ff}.col .result{color:#7ee787}.divider{width:1pt;background:#21262d}.footer{display:flex;align-items:center;justify-content:space-between;margin-top:10pt}.footer p{font-size:10.5pt;color:#8b949e;margin:0}.footer .key{color:#d2f4d5}.footer b{color:#56d364}
+</style></head><body>
+<p class="eyebrow">A REAL STACK, START TO FINISH</p><h1>Create three stacked pull requests</h1><h2>Run this inside a clean repository with an authenticated GitHub CLI and a configured remote.</h2>
+<div class="terminal"><div class="bar"><div class="dots"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div><p>task-api — bash</p></div><div class="code">
+<div class="col">
+<p class="comment"># Install once</p><p class="cmd">$ gh extension install github/gh-stack</p>
+<p class="comment"># Layer 1: model</p><p class="cmd">$ gh stack init feature/task-model</p><p class="comment"># edit src/model.js</p><p class="cmd">$ git add src/model.js</p><p class="cmd">$ git commit -m "feat: add task model"</p>
+<p class="comment"># Layer 2: API</p><p class="cmd">$ gh stack add feature/task-api</p><p class="comment"># edit src/api.js</p><p class="cmd">$ git add src/api.js</p><p class="cmd">$ git commit -m "feat: add task API"</p>
+</div><div class="divider"></div><div class="col">
+<p class="comment"># Layer 3: tests</p><p class="cmd">$ gh stack add test/task-api</p><p class="comment"># edit test/api.test.js</p><p class="cmd">$ git add test/api.test.js</p><p class="cmd">$ git commit -m "test: cover task API"</p>
+<p class="comment"># Inspect, then create all three PRs</p><p class="cmd">$ gh stack view</p><p class="cmd">$ gh stack submit</p><p class="comment"># submit pushes, opens PRs, and links the stack</p>
+<p class="comment"># Later: update and land the stack</p><p class="cmd">$ gh stack sync</p><p class="cmd">$ gh stack merge</p>
+</div></div></div>
+<div class="footer"><p class="key"><b>Key idea:</b> commit each focused change before adding the next layer.</p><p>Interactive submit lets you review titles, descriptions, and draft state.</p></div>
+</body></html>
