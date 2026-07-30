@@ -1,0 +1,13 @@
+{
+  "name": "gh-stack-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A tiny Node.js API for demonstrating GitHub Stacked PRs",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
