@@ -16,6 +16,24 @@ async function main() {
   for (let i = 1; i <= 3; i++) {
     const file = path.join(__dirname, `slide${i}.html`);
     const { slide } = await html2pptx(file, pptx);
+    slide.addShape(pptx.ShapeType.roundRect, {
+      x: 8.43, y: 0.16, w: 1.18, h: 0.31,
+      rectRadius: 0.06,
+      fill: { color: '1A5D2A' },
+      line: { color: '2EA043', width: 1 }
+    });
+    slide.addText('gh.io/stacks', {
+      x: 8.43, y: 0.16, w: 1.18, h: 0.31,
+      fontFace: 'Arial', fontSize: 10.5, bold: true,
+      color: 'FFFFFF', align: 'center', valign: 'mid',
+      margin: 0,
+      hyperlink: { url: 'https://gh.io/stacks' }
+    });
+    slide.addImage({
+      path: path.join(__dirname, 'github-invertocat.png'),
+      x: 9.43, y: 5.06, w: 0.33, h: 0.33,
+      hyperlink: { url: 'https://github.com' }
+    });
     slide.addNotes(`Video visual ${i} of 3. See VIDEO.md for narration and shot timing.`);
   }
 
