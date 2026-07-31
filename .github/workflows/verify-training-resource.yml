@@ -50,7 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: workshop/task-tests
+          ref: tasks/api
 
       - uses: actions/setup-node@v4
         with:

@@ -98,14 +98,14 @@ Build-mode repository created:
 Next:
   cd $TARGET_DIR
   open docs/workshop/README.md
-  start with: gh stack init workshop/task-model
+  start with: gh stack init tasks/model
 EOF
   exit 0
 fi
 
-gh stack init --base main workshop/task-model
+gh stack init --base main tasks/model
 
-mkdir -p src
+mkdir -p src test
 cat > src/tasks.js <<'EOF'
 export function createTask(title) {
   return {
@@ -116,44 +116,175 @@ export function createTask(title) {
 }
 EOF
 
-git add src/tasks.js
-git commit -m "feat: add task model"
+cat > test/tasks.model.test.js <<'EOF'
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createTask } from '../src/tasks.js';
 
-gh stack add workshop/task-validation
-cat >> src/tasks.js <<'EOF'
+test('creates a task with the expected defaults', () => {
+  const task = createTask('Ship the demo');
 
-export function isValidTask(task) {
-  return Boolean(task?.title?.trim());
+  assert.match(task.id, /^[0-9a-f-]{36}$/);
+  assert.equal(task.title, 'Ship the demo');
+  assert.equal(task.completed, false);
+});
+EOF
+
+npm test
+git add src/tasks.js test/tasks.model.test.js
+git commit -m "feat: add tested task model"
+
+gh stack add tasks/validation
+cat > src/tasks.js <<'EOF'
+export function validateTaskTitle(title) {
+  if (typeof title !== 'string' || !title.trim()) {
+    throw new TypeError('Task title is required');
+  }
+
+  return title.trim();
+}
+
+export function createTask(title) {
+  return {
+    id: crypto.randomUUID(),
+    title: validateTaskTitle(title),
+    completed: false,
+  };
 }
 EOF
 
-git add src/tasks.js
-git commit -m "feat: validate task titles"
-
-gh stack add workshop/task-tests
-mkdir -p test
-cat > test/tasks.test.js <<'EOF'
+cat > test/tasks.validation.test.js <<'EOF'
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createTask, isValidTask } from '../src/tasks.js';
+import { createTask } from '../src/tasks.js';
 
-test('creates a valid task', () => {
-  const task = createTask('Ship the demo');
-
-  assert.equal(task.title, 'Ship the demo');
-  assert.equal(task.completed, false);
-  assert.equal(isValidTask(task), true);
+test('trims a valid task title', () => {
+  assert.equal(createTask('  Ship the demo  ').title, 'Ship the demo');
 });
 
-test('rejects a task with an empty title', () => {
-  assert.equal(isValidTask(createTask('   ')), false);
+test('rejects a whitespace-only task title', () => {
+  assert.throws(() => createTask('   '), /Task title is required/);
+});
+
+test('rejects a missing task title', () => {
+  assert.throws(() => createTask(), /Task title is required/);
 });
 EOF
 
-git add test/tasks.test.js
-git commit -m "test: cover task creation and validation"
+npm test
+git add src/tasks.js test/tasks.validation.test.js
+git commit -m "feat: add tested task validation"
+
+gh stack add tasks/api
+cat > src/server.js <<'EOF'
+import { createServer } from 'node:http';
+import { pathToFileURL } from 'node:url';
+import { createTask } from './tasks.js';
+
+function sendJson(response, statusCode, body) {
+  response.writeHead(statusCode, { 'content-type': 'application/json' });
+  response.end(JSON.stringify(body));
+}
+
+export function createTaskServer() {
+  return createServer((request, response) => {
+    if (request.method !== 'POST' || request.url !== '/tasks') {
+      sendJson(response, 404, { error: 'Not found' });
+      return;
+    }
+
+    let body = '';
+    request.setEncoding('utf8');
+    request.on('data', (chunk) => {
+      body += chunk;
+    });
+    request.on('end', () => {
+      try {
+        const { title } = JSON.parse(body);
+        sendJson(response, 201, createTask(title));
+      } catch (error) {
+        const message = error instanceof SyntaxError ? 'Invalid JSON' : error.message;
+        sendJson(response, 400, { error: message });
+      }
+    });
+  });
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const port = Number(process.env.PORT ?? 3000);
+  createTaskServer().listen(port, () => {
+    console.log(`Task API listening on http://localhost:${port}`);
+  });
+}
+EOF
+
+cat > test/tasks.api.test.js <<'EOF'
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createTaskServer } from '../src/server.js';
+
+async function withServer(run) {
+  const server = createTaskServer();
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+
+  try {
+    const { port } = server.address();
+    await run(`http://127.0.0.1:${port}`);
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+  }
+}
+
+test('POST /tasks creates a task', async () => {
+  await withServer(async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/tasks`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ title: 'Ship the API' }),
+    });
+    const task = await response.json();
+
+    assert.equal(response.status, 201);
+    assert.equal(task.title, 'Ship the API');
+    assert.equal(task.completed, false);
+  });
+});
+
+test('POST /tasks rejects an invalid title', async () => {
+  await withServer(async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/tasks`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ title: '   ' }),
+    });
+
+    assert.equal(response.status, 400);
+    assert.deepEqual(await response.json(), { error: 'Task title is required' });
+  });
+});
+EOF
+
+cat > package.json <<'EOF'
+{
+  "name": "gh-stacked-prs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A tiny Node.js API for demonstrating GitHub Stacked PRs",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
+EOF
 
 npm test
+git add package.json src/server.js test/tasks.api.test.js
+git commit -m "feat: add tested task API"
+
 gh stack view --json
 gh stack submit --auto --open
 python scripts/verify-demo.py --repo "$TARGET_REPO"
@@ -163,5 +294,5 @@ cat <<EOF
 Ready-mode repository created and verified:
   https://github.com/$TARGET_REPO
 
-The three pull requests are open and ready for review.
+The three pull requests are open, green, and ready for review.
 EOF

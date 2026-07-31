@@ -11,18 +11,18 @@ import sys
 EXPECTED = [
     {
         "base": "main",
-        "head": "workshop/task-model",
-        "files": ["src/tasks.js"],
+        "head": "tasks/model",
+        "files": ["src/tasks.js", "test/tasks.model.test.js"],
     },
     {
-        "base": "workshop/task-model",
-        "head": "workshop/task-validation",
-        "files": ["src/tasks.js"],
+        "base": "tasks/model",
+        "head": "tasks/validation",
+        "files": ["src/tasks.js", "test/tasks.validation.test.js"],
     },
     {
-        "base": "workshop/task-validation",
-        "head": "workshop/task-tests",
-        "files": ["test/tasks.test.js"],
+        "base": "tasks/validation",
+        "head": "tasks/api",
+        "files": ["package.json", "src/server.js", "test/tasks.api.test.js"],
     },
 ]
 
@@ -110,12 +110,12 @@ def main() -> int:
         )
 
     if failures:
-        print("\nDemo integrity check failed:", file=sys.stderr)
+        print("\nTraining stack integrity check failed:", file=sys.stderr)
         for failure in failures:
             print(f"- {failure}", file=sys.stderr)
         return 1
 
-    print("\nDemo integrity check passed.")
+    print("\nTraining stack integrity check passed.")
     return 0
 
 

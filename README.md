@@ -55,9 +55,9 @@ Need to bring your team up to speed on GitHub Stacked PRs? [Download the latest 
 
 ## Planned stack
 
-1. [`workshop/task-model`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-model) adds the task model.
-2. [`workshop/task-validation`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-validation) adds title validation.
-3. [`workshop/task-tests`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-tests) adds tests for both layers.
+1. [`tasks/model`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Atasks%2Fmodel) adds the task model and its unit test.
+2. [`tasks/validation`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Atasks%2Fvalidation) adds title validation and its unit tests.
+3. [`tasks/api`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Atasks%2Fapi) adds `POST /tasks` and API integration tests.
 
 Each PR targets the branch below it, so reviewers see only that layer's changes.
 
@@ -174,14 +174,14 @@ gh repo create "$OWNER/$REPO" \
 
 Publishing `main` before initializing the stack gives `gh stack` a remote and a default trunk branch to detect.
 
-### 3. Create the bottom layer: task model
+### 3. Create the bottom layer: tested task model
 
-`gh stack init` creates `workshop/task-model` from `main`, records it as the first layer, and checks it out.
+`gh stack init` creates `tasks/model` from `main`, records it as the first layer, and checks it out. This layer includes both the model and its unit test.
 
 ```sh
-gh stack init workshop/task-model
+gh stack init tasks/model
 
-mkdir -p src
+mkdir -p src test
 cat > src/tasks.js <<'EOF'
 export function createTask(title) {
   return {
@@ -192,63 +192,199 @@ export function createTask(title) {
 }
 EOF
 
-git add src/tasks.js
-git commit -m "feat: add task model"
+cat > test/tasks.model.test.js <<'EOF'
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createTask } from '../src/tasks.js';
+
+test('creates a task with the expected defaults', () => {
+  const task = createTask('Ship the demo');
+
+  assert.match(task.id, /^[0-9a-f-]{36}$/);
+  assert.equal(task.title, 'Ship the demo');
+  assert.equal(task.completed, false);
+});
+EOF
+
+npm test
+git add src/tasks.js test/tasks.model.test.js
+git commit -m "feat: add tested task model"
 ```
 
-### 4. Add the middle layer: validation
+### 4. Add the middle layer: tested validation
 
-`gh stack add` creates the next branch from the current top layer and checks it out.
+`gh stack add` creates the next branch from the current top layer. This layer introduces title validation and its unit tests.
 
 ```sh
-gh stack add workshop/task-validation
+gh stack add tasks/validation
 
-cat >> src/tasks.js <<'EOF'
+cat > src/tasks.js <<'EOF'
+export function validateTaskTitle(title) {
+  if (typeof title !== 'string' || !title.trim()) {
+    throw new TypeError('Task title is required');
+  }
 
-export function isValidTask(task) {
-  return Boolean(task?.title?.trim());
+  return title.trim();
+}
+
+export function createTask(title) {
+  return {
+    id: crypto.randomUUID(),
+    title: validateTaskTitle(title),
+    completed: false,
+  };
 }
 EOF
 
-git add src/tasks.js
-git commit -m "feat: validate task titles"
-```
-
-### 5. Add the top layer: tests
-
-```sh
-gh stack add workshop/task-tests
-
-mkdir -p test
-cat > test/tasks.test.js <<'EOF'
+cat > test/tasks.validation.test.js <<'EOF'
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createTask, isValidTask } from '../src/tasks.js';
+import { createTask } from '../src/tasks.js';
 
-test('creates a valid task', () => {
-  const task = createTask('Ship the demo');
-
-  assert.equal(task.title, 'Ship the demo');
-  assert.equal(task.completed, false);
-  assert.equal(isValidTask(task), true);
+test('trims a valid task title', () => {
+  assert.equal(createTask('  Ship the demo  ').title, 'Ship the demo');
 });
 
-test('rejects a task with an empty title', () => {
-  assert.equal(isValidTask(createTask('   ')), false);
+test('rejects a whitespace-only task title', () => {
+  assert.throws(() => createTask('   '), /Task title is required/);
+});
+
+test('rejects a missing task title', () => {
+  assert.throws(() => createTask(), /Task title is required/);
 });
 EOF
 
-git add test/tasks.test.js
-git commit -m "test: cover task creation and validation"
+npm test
+git add src/tasks.js test/tasks.validation.test.js
+git commit -m "feat: add tested task validation"
 ```
+
+### 5. Add the top layer: tested task API
+
+The top layer exposes the model and validation behavior through `POST /tasks`. It includes integration tests and a runnable `npm start` command.
+
+```sh
+gh stack add tasks/api
+
+cat > src/server.js <<'EOF'
+import { createServer } from 'node:http';
+import { pathToFileURL } from 'node:url';
+import { createTask } from './tasks.js';
+
+function sendJson(response, statusCode, body) {
+  response.writeHead(statusCode, { 'content-type': 'application/json' });
+  response.end(JSON.stringify(body));
+}
+
+export function createTaskServer() {
+  return createServer((request, response) => {
+    if (request.method !== 'POST' || request.url !== '/tasks') {
+      sendJson(response, 404, { error: 'Not found' });
+      return;
+    }
+
+    let body = '';
+    request.setEncoding('utf8');
+    request.on('data', (chunk) => {
+      body += chunk;
+    });
+    request.on('end', () => {
+      try {
+        const { title } = JSON.parse(body);
+        sendJson(response, 201, createTask(title));
+      } catch (error) {
+        const message = error instanceof SyntaxError ? 'Invalid JSON' : error.message;
+        sendJson(response, 400, { error: message });
+      }
+    });
+  });
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const port = Number(process.env.PORT ?? 3000);
+  createTaskServer().listen(port, () => {
+    console.log(`Task API listening on http://localhost:${port}`);
+  });
+}
+EOF
+
+cat > test/tasks.api.test.js <<'EOF'
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createTaskServer } from '../src/server.js';
+
+async function withServer(run) {
+  const server = createTaskServer();
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+
+  try {
+    const { port } = server.address();
+    await run(`http://127.0.0.1:${port}`);
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+  }
+}
+
+test('POST /tasks creates a task', async () => {
+  await withServer(async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/tasks`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ title: 'Ship the API' }),
+    });
+    const task = await response.json();
+
+    assert.equal(response.status, 201);
+    assert.equal(task.title, 'Ship the API');
+    assert.equal(task.completed, false);
+  });
+});
+
+test('POST /tasks rejects an invalid title', async () => {
+  await withServer(async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/tasks`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ title: '   ' }),
+    });
+
+    assert.equal(response.status, 400);
+    assert.deepEqual(await response.json(), { error: 'Task title is required' });
+  });
+});
+EOF
+
+cat > package.json <<'EOF'
+{
+  "name": "gh-stacked-prs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A tiny Node.js API for demonstrating GitHub Stacked PRs",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
+EOF
+
+npm test
+git add package.json src/server.js test/tasks.api.test.js
+git commit -m "feat: add tested task API"
+```
+
+Each layer follows the same TDD-compatible boundary: write the test, implement the behavior, and submit a green branch containing both.
 
 The local branch chain is now:
 
 ```text
 main
-└── workshop/task-model
-    └── workshop/task-validation
-        └── workshop/task-tests
+└── tasks/model
+    └── tasks/validation
+        └── tasks/api
 ```
 
 ### 6. Test, inspect, and submit
@@ -262,9 +398,9 @@ gh stack submit --auto --open
 `gh stack submit --auto --open` performs the GitHub-side work in one operation:
 
 1. Pushes all three branches.
-2. Creates PR #1 from `workshop/task-model` into `main`.
-3. Creates PR #2 from `workshop/task-validation` into `workshop/task-model`.
-4. Creates PR #3 from `workshop/task-tests` into `workshop/task-validation`.
+2. Creates PR #1 from `tasks/model` into `main`.
+3. Creates PR #2 from `tasks/validation` into `tasks/model`.
+4. Creates PR #3 from `tasks/api` into `tasks/validation`.
 5. Links the three PRs as one GitHub stack.
 6. Marks all three PRs ready for review rather than draft.
 
@@ -315,9 +451,9 @@ Before starting, verify:
 Then execute the README workflow to:
 
 - Create and publish the main branch.
-- Create workshop/task-model as the bottom stack layer.
-- Create workshop/task-validation as the middle layer.
-- Create workshop/task-tests as the top layer.
+- Create tasks/model as the bottom stack layer.
+- Create tasks/validation as the middle layer.
+- Create tasks/api as the top layer.
 - Commit the focused change on each branch.
 - Run the Node.js tests.
 - Inspect the local stack.
@@ -338,12 +474,12 @@ After submission, verify all of the following:
 1. The tests pass.
 2. The branch ancestry is:
    main
-   └── workshop/task-model
-       └── workshop/task-validation
-           └── workshop/task-tests
-3. PR #1 targets main from workshop/task-model.
-4. PR #2 targets workshop/task-model from workshop/task-validation.
-5. PR #3 targets workshop/task-validation from workshop/task-tests.
+   └── tasks/model
+       └── tasks/validation
+           └── tasks/api
+3. PR #1 targets main from tasks/model.
+4. PR #2 targets tasks/model from tasks/validation.
+5. PR #3 targets tasks/validation from tasks/api.
 6. All three PRs are open and ready for review, not drafts.
 7. gh stack view shows the three PRs as one linked stack.
 8. Each PR contains only its intended focused change.

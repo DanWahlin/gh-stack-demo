@@ -1,73 +1,85 @@
 # Review the live stack
 
-Use the open training stack in [this repository](https://github.com/DanWahlin/gh-stacked-prs/pulls) for this walkthrough.
+Use the open learning stack in [this repository](https://github.com/DanWahlin/gh-stacked-prs/pulls) for this walkthrough.
 
 ## Stack graph
 
 ```text
 main
-└── workshop/task-model
-    └── workshop/task-validation
-        └── workshop/task-tests
+└── tasks/model
+    └── tasks/validation
+        └── tasks/api
 ```
 
-## Bottom PR: Task model
+Each branch ends green. Tests are delivered with the behavior they verify rather than deferred to a separate top layer.
 
-Open the pull request whose head branch is [`workshop/task-model`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-model).
+## Bottom PR: Tested task model
+
+Open the pull request whose head branch is [`tasks/model`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Atasks%2Fmodel).
 
 Verify:
 
 - Base: `main`
-- Head: `workshop/task-model`
-- Changed file: `src/tasks.js`
+- Head: `tasks/model`
+- Changed files: `src/tasks.js` and `test/tasks.model.test.js`
 - Responsibility: Create a task with an ID, title, and incomplete state
+- Acceptance: The model unit test passes
 
-Review the domain shape before reviewing dependent validation or tests. A design change requested here affects every layer above it.
+Review the domain shape before reviewing dependent validation or API behavior.
 
 Sample review question:
 
-> Should task creation normalize the title, or should normalization belong in the validation layer?
+> Does the task model expose the smallest useful contract for the layers above it?
 
-The team must answer this boundary question before approving higher layers.
+## Middle PR: Tested validation
 
-## Middle PR: Validation
-
-Open the pull request whose head branch is [`workshop/task-validation`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-validation).
+Open the pull request whose head branch is [`tasks/validation`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Atasks%2Fvalidation).
 
 Verify:
 
-- Base: `workshop/task-model`
-- Head: `workshop/task-validation`
-- Changed file: `src/tasks.js`
-- Responsibility: Validate missing or whitespace-only task titles
-
-The Files changed tab shows only the validation addition because the PR targets the model branch instead of `main`.
+- Base: `tasks/model`
+- Head: `tasks/validation`
+- Changed files: `src/tasks.js` and `test/tasks.validation.test.js`
+- Responsibility: Trim valid titles and reject missing or whitespace-only titles
+- Acceptance: Model and validation tests pass
 
 Sample review question:
 
-> Does validation return enough information for callers, or is a Boolean appropriate for this layer?
+> Should normalization and rejection both belong at this domain boundary?
 
-## Top PR: Tests
+## Top PR: Tested task API
 
-Open the pull request whose head branch is [`workshop/task-tests`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-tests).
+Open the pull request whose head branch is [`tasks/api`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Atasks%2Fapi).
 
 Verify:
 
-- Base: `workshop/task-validation`
-- Head: `workshop/task-tests`
-- Changed file: `test/tasks.test.js`
-- Responsibility: Verify task creation and whitespace validation
+- Base: `tasks/validation`
+- Head: `tasks/api`
+- Changed files: `package.json`, `src/server.js`, and `test/tasks.api.test.js`
+- Responsibility: Expose `POST /tasks` and translate domain failures into HTTP responses
+- Acceptance: All unit and integration tests pass
 
 Sample review question:
 
-> Which behavior is still untested, and does that missing case belong in this layer or a lower one?
+> Does the HTTP layer translate domain behavior without duplicating it?
+
+## TDD and the stack
+
+Test-driven development occurs within each branch:
+
+1. Write a failing test for that layer.
+2. Implement the behavior.
+3. Refactor while the test remains green.
+4. Submit the behavior and its tests together.
+
+A tests-only bottom PR would intentionally fail until an implementation arrived above it. That works poorly with required checks and independently mergeable PRs. The head of every branch in this example is green.
 
 ## Review sequence
 
-1. Review the model PR and resolve foundational design questions.
-2. Review the validation PR against the approved model contract.
-3. Review the tests PR against the behavior introduced below it.
-4. Confirm that all checks pass.
+1. Review the tested model contract.
+2. Review validation against the approved model.
+3. Review the API against the approved domain behavior.
+4. Confirm that every branch passes its applicable tests.
 5. Merge only the approved portion of the stack.
 
 ## What a poor stack looks like
@@ -75,7 +87,7 @@ Sample review question:
 Stop and restructure when:
 
 - A PR contains several unrelated responsibilities.
-- A higher layer can be reviewed without the lower layer and therefore belongs in a separate stack.
-- Tests exist only at the top even though lower layers can fail independently.
+- Tests are deferred to a separate layer even though lower behavior can fail independently.
+- A lower PR is intentionally red and cannot satisfy required checks.
 - Formatting or generated-file churn hides the functional change.
 - Reviewers cannot state the acceptance criterion for one layer.
