@@ -1,6 +1,6 @@
 # Review the live stack
 
-Use the open training stack in [this repository](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls) for this walkthrough.
+Use the open training stack in [this repository](https://github.com/DanWahlin/gh-stacked-prs/pulls) for this walkthrough.
 
 ## Stack graph
 
@@ -13,7 +13,7 @@ main
 
 ## Bottom PR: Task model
 
-Open the pull request whose head branch is [`workshop/task-model`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-model).
+Open the pull request whose head branch is [`workshop/task-model`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-model).
 
 Verify:
 
@@ -32,7 +32,7 @@ The team must answer this boundary question before approving higher layers.
 
 ## Middle PR: Validation
 
-Open the pull request whose head branch is [`workshop/task-validation`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-validation).
+Open the pull request whose head branch is [`workshop/task-validation`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-validation).
 
 Verify:
 
@@ -49,7 +49,7 @@ Sample review question:
 
 ## Top PR: Tests
 
-Open the pull request whose head branch is [`workshop/task-tests`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-tests).
+Open the pull request whose head branch is [`workshop/task-tests`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-tests).
 
 Verify:
 

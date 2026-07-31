@@ -17,8 +17,8 @@ By the end of the workshop, learners can:
 Do not fork this repository. Create an isolated build-mode repository before the workshop:
 
 ```sh
-git clone https://github.com/DanWahlin/gh-stacked-prs-demo.git
-gh-stacked-prs-demo/scripts/create-workshop-copy.sh \
+git clone https://github.com/DanWahlin/gh-stacked-prs.git
+gh-stacked-prs/scripts/create-workshop-copy.sh \
   YOUR-OWNER/my-stacked-prs-workshop \
   --build \
   --private
