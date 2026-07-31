@@ -1,0 +1,56 @@
+name: Verify training resource
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 15 * * 1"
+  push:
+    branches: [main]
+    paths:
+      - "README.md"
+      - "AGENTS.md"
+      - "docs/**"
+      - "scripts/**"
+      - ".github/workflows/verify-training-resource.yml"
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  documentation-and-live-stack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check documentation
+        run: python scripts/check-docs.py
+
+      - name: Install gh-stack
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh extension install github/gh-stack
+
+      - name: Verify the canonical live stack
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/verify-demo.py
+
+  top-layer-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: DanWahlin/gh-stack-demo-validated
+          ref: test/task-model
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run complete stack tests
+        run: npm test

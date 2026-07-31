@@ -6,17 +6,62 @@
 
 A tiny Node.js task API built as three focused pull requests to demonstrate [GitHub's Stacked PRs feature](https://docs.github.com/pull-requests/how-tos/stacked-pull-requests) and the `gh stack` CLI extension.
 
+## Choose your path
+
+- **5 minutes:** Read [How stacked PRs work](#how-stacked-prs-work).
+- **15 minutes:** Follow the [live-stack review walkthrough](docs/review-walkthrough.md).
+- **30 minutes:** Follow [Commands used to create this demo](#commands-used-to-create-this-demo).
+- **45–60 minutes:** Run the [team workshop](docs/workshop/README.md).
+- **Team leads:** Adapt the [team playbook](docs/team-playbook.md) and [full lifecycle](docs/lifecycle.md).
+- **Facilitators:** Use the [presentation and facilitator guide](docs/facilitator-guide.md).
+- **AI-assisted teams:** Configure the [AI-agent workflow](docs/ai-agent-workflow.md).
+
+Keep the [`gh stack` cheat sheet](docs/cheat-sheet.md), [glossary](docs/glossary.md), and [troubleshooting guide](docs/troubleshooting.md) nearby after training.
+
+## How stacked PRs work
+
+A stacked pull request is one reviewable layer in a linear dependency chain. Each branch starts from the branch below it, and each pull request targets that lower branch. Reviewers see the change introduced by one layer instead of every change accumulated above `main`.
+
+| Ordinary pull request | Stacked pull requests |
+| --- | --- |
+| One branch targets `main` | Each branch targets the layer below it |
+| One potentially large review | Several focused reviews |
+| Dependencies can be hidden inside one diff | Dependencies are explicit in the branch graph |
+| Best for an isolated change | Best for linear dependent changes |
+
+Review normally starts at the bottom because higher layers depend on decisions made below. Every layer must remain independently testable and reviewable.
+
+### Decide whether to use a stack
+
+```text
+Does the work contain multiple reviewable changes?
+├── No → Use a normal branch and pull request
+└── Yes
+    └── Do the changes form one linear dependency chain?
+        ├── Yes → Use one stack
+        └── No → Use separate branches or separate stacks
+```
+
+Examples:
+
+- Database model → API → UI: one stack
+- Authentication and billing: separate stacks
+- Small typo and its test: one normal pull request
+- Shared foundation followed by two independent features: foundational pull request, then separate stacks
+
 ## Presentation
 
 Need to bring your team up to speed on GitHub Stacked PRs? [Download the latest PowerPoint deck](https://github.com/DanWahlin/gh-stacked-prs-demo/raw/refs/heads/main/github-stacked-prs.pptx) to use for a quick presentation. It includes the challenge stacked PRs address, high-level concept, CLI workflow, and a start-to-finish terminal example.
 
 ## Planned stack
 
-1. `feature/task-model` adds the task model.
-2. `feature/task-validation` adds title validation.
-3. `test/task-model` adds tests for both layers.
+1. [`feature/task-model`](https://github.com/DanWahlin/gh-stack-demo-validated/pull/1) adds the task model.
+2. [`feature/task-validation`](https://github.com/DanWahlin/gh-stack-demo-validated/pull/2) adds title validation.
+3. [`test/task-model`](https://github.com/DanWahlin/gh-stack-demo-validated/pull/3) adds tests for both layers.
 
 Each PR targets the branch below it, so reviewers see only that layer's changes.
+
+The linked pull requests live in the independently generated validation repository. They remain open so teams can inspect each base branch, commit, and focused diff without changing the training artifact.
 
 ## Requirements
 
@@ -35,6 +80,32 @@ If that command is unavailable, install the extension once:
 ```sh
 gh extension install github/gh-stack
 ```
+
+## Use stacked PRs with an AI coding agent
+
+This repository includes an [`AGENTS.md`](AGENTS.md) rule that helps coding agents decide whether a substantial multi-part change belongs in a stacked pull request workflow.
+
+For the best results, make the `gh-stack` skill available to your coding agent. Ask the agent to load the skill before it plans or implements the change. Then start with a prompt such as:
+
+```text
+Build authentication, its API endpoints, and the account UI. Before coding,
+inspect the repository and decide whether this should be a gh-stack. Show me
+the proposed branch stack and verification boundary for each pull request.
+Wait for my approval before implementing, pushing branches, or submitting
+pull requests.
+```
+
+Use one stack when the changes form a linear dependency chain:
+
+```text
+main
+└── auth/domain-model
+    └── auth/api
+        └── auth/account-ui
+            └── auth/e2e-tests
+```
+
+Use separate stacks, preferably in separate worktrees, for independent features. Use a normal branch and pull request for a small isolated change. The repository's `AGENTS.md` contains the complete decision and safety rules for coding agents.
 
 ## Commands used to create this demo
 
