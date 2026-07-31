@@ -1,24 +1,24 @@
 # Review the live stack
 
-Use the independently generated [validation repository](https://github.com/DanWahlin/gh-stack-demo-validated) for this walkthrough.
+Use the open training stack in [this repository](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls) for this walkthrough.
 
 ## Stack graph
 
 ```text
 main
-└── PR #1: feature/task-model
-    └── PR #2: feature/task-validation
-        └── PR #3: test/task-model
+└── training/task-model
+    └── training/task-validation
+        └── training/task-tests
 ```
 
-## PR #1: Task model
+## Bottom PR: Task model
 
-Open [PR #1](https://github.com/DanWahlin/gh-stack-demo-validated/pull/1).
+Open the pull request whose head branch is [`training/task-model`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Atraining%2Ftask-model).
 
 Verify:
 
 - Base: `main`
-- Head: `feature/task-model`
+- Head: `training/task-model`
 - Changed file: `src/tasks.js`
 - Responsibility: Create a task with an ID, title, and incomplete state
 
@@ -30,14 +30,14 @@ Sample review question:
 
 The team must answer this boundary question before approving higher layers.
 
-## PR #2: Validation
+## Middle PR: Validation
 
-Open [PR #2](https://github.com/DanWahlin/gh-stack-demo-validated/pull/2).
+Open the pull request whose head branch is [`training/task-validation`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Atraining%2Ftask-validation).
 
 Verify:
 
-- Base: `feature/task-model`
-- Head: `feature/task-validation`
+- Base: `training/task-model`
+- Head: `training/task-validation`
 - Changed file: `src/tasks.js`
 - Responsibility: Validate missing or whitespace-only task titles
 
@@ -47,14 +47,14 @@ Sample review question:
 
 > Does validation return enough information for callers, or is a Boolean appropriate for this layer?
 
-## PR #3: Tests
+## Top PR: Tests
 
-Open [PR #3](https://github.com/DanWahlin/gh-stack-demo-validated/pull/3).
+Open the pull request whose head branch is [`training/task-tests`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Atraining%2Ftask-tests).
 
 Verify:
 
-- Base: `feature/task-validation`
-- Head: `test/task-model`
+- Base: `training/task-validation`
+- Head: `training/task-tests`
 - Changed file: `test/tasks.test.js`
 - Responsibility: Verify task creation and whitespace validation
 
@@ -64,9 +64,9 @@ Sample review question:
 
 ## Review sequence
 
-1. Review PR #1 and resolve foundational design questions.
-2. Review PR #2 against the approved model contract.
-3. Review PR #3 against the behavior introduced below it.
+1. Review the model PR and resolve foundational design questions.
+2. Review the validation PR against the approved model contract.
+3. Review the tests PR against the behavior introduced below it.
 4. Confirm that all checks pass.
 5. Merge only the approved portion of the stack.
 

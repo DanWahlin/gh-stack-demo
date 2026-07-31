@@ -32,10 +32,9 @@ Complete these checks before the session:
 ```sh
 gh auth status
 gh stack --version
-gh pr list --repo DanWahlin/gh-stack-demo-validated --state open
-gh pr view 1 --repo DanWahlin/gh-stack-demo-validated --json baseRefName,headRefName,files
-gh pr view 2 --repo DanWahlin/gh-stack-demo-validated --json baseRefName,headRefName,files
-gh pr view 3 --repo DanWahlin/gh-stack-demo-validated --json baseRefName,headRefName,files
+gh pr list --repo DanWahlin/gh-stacked-prs-demo --state open --head training/task-model --json number,baseRefName,headRefName,files
+gh pr list --repo DanWahlin/gh-stacked-prs-demo --state open --head training/task-validation --json number,baseRefName,headRefName,files
+gh pr list --repo DanWahlin/gh-stacked-prs-demo --state open --head training/task-tests --json number,baseRefName,headRefName,files
 ```
 
 Verify that the three PRs are open, ready for review, and focused. Keep screenshots available in case network access fails.

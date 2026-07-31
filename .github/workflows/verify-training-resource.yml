@@ -45,8 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: DanWahlin/gh-stack-demo-validated
-          ref: test/task-model
+          ref: training/task-tests
 
       - uses: actions/setup-node@v4
         with:

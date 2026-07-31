@@ -8,23 +8,23 @@ import json
 import subprocess
 import sys
 
-EXPECTED = {
-    1: {
+EXPECTED = [
+    {
         "base": "main",
-        "head": "feature/task-model",
+        "head": "training/task-model",
         "files": ["src/tasks.js"],
     },
-    2: {
-        "base": "feature/task-model",
-        "head": "feature/task-validation",
+    {
+        "base": "training/task-model",
+        "head": "training/task-validation",
         "files": ["src/tasks.js"],
     },
-    3: {
-        "base": "feature/task-validation",
-        "head": "test/task-model",
+    {
+        "base": "training/task-validation",
+        "head": "training/task-tests",
         "files": ["test/tasks.test.js"],
     },
-}
+]
 
 
 def run(*args: str) -> str:
@@ -39,7 +39,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--repo",
-        default="DanWahlin/gh-stack-demo-validated",
+        default="DanWahlin/gh-stacked-prs-demo",
         help="GitHub repository containing the canonical open stack",
     )
     args = parser.parse_args()
@@ -62,23 +62,33 @@ def main() -> int:
     print(f"CLI: {version}")
     print(f"Repository: https://github.com/{args.repo}")
 
-    for number, expected in EXPECTED.items():
+    for expected in EXPECTED:
         try:
             raw = run(
                 "gh",
                 "pr",
-                "view",
-                str(number),
+                "list",
                 "--repo",
                 args.repo,
+                "--state",
+                "open",
+                "--head",
+                expected["head"],
                 "--json",
                 "number,state,isDraft,baseRefName,headRefName,files,url",
             )
-            pr = json.loads(raw)
+            matches = json.loads(raw)
         except (RuntimeError, json.JSONDecodeError) as error:
-            failures.append(f"PR #{number} could not be inspected: {error}")
+            failures.append(f"{expected['head']} could not be inspected: {error}")
             continue
 
+        if len(matches) != 1:
+            failures.append(
+                f"{expected['head']}: expected one open PR, observed {len(matches)}"
+            )
+            continue
+
+        pr = matches[0]
         actual_files = sorted(item["path"] for item in pr["files"])
         expected_files = sorted(expected["files"])
         checks = {
@@ -91,11 +101,11 @@ def main() -> int:
         for label, (actual, wanted) in checks.items():
             if actual != wanted:
                 failures.append(
-                    f"PR #{number} {label}: expected {wanted!r}, observed {actual!r}"
+                    f"PR #{pr['number']} {label}: expected {wanted!r}, observed {actual!r}"
                 )
 
         print(
-            f"PR #{number}: {pr['baseRefName']} <- {pr['headRefName']} "
+            f"PR #{pr['number']}: {pr['baseRefName']} <- {pr['headRefName']} "
             f"({', '.join(actual_files)})"
         )
 
