@@ -63,16 +63,11 @@ Sample review question:
 
 > Does the HTTP layer translate domain behavior without duplicating it?
 
-## TDD and the stack
+## Tests and the stack
 
-Test-driven development occurs within each branch:
+Keep each layer's behavior and tests in the same branch. The branch must pass its applicable tests before the next layer is created.
 
-1. Write a failing test for that layer.
-2. Implement the behavior.
-3. Refactor while the test remains green.
-4. Submit the behavior and its tests together.
-
-A tests-only bottom PR would intentionally fail until an implementation arrived above it. That works poorly with required checks and independently mergeable PRs. The head of every branch in this example is green.
+A tests-only bottom pull request would intentionally fail until implementation arrived above it. That works poorly with required checks and independently reviewable pull requests. The head of every branch in this example is green.
 
 ## Review sequence
 

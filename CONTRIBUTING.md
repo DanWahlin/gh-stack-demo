@@ -25,6 +25,10 @@ shellcheck scripts/create-workshop-copy.sh
 
 Run the tests from the top branch of a disposable or validation stack. Confirm that every pull request still contains only its intended layer.
 
+## Validate presentation changes
+
+Treat the latest PowerPoint file as the source of truth. Use targeted edits that preserve animations, render every slide for visual inspection, and confirm the deck uses the canonical `tasks/model → tasks/validation → tasks/api` example.
+
 ## Pull request expectations
 
 Describe:

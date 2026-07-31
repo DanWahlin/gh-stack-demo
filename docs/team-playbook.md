@@ -20,17 +20,17 @@ Before coding, post:
 ```text
 Trunk: main
 
-1. feature/domain
-   Responsibility: Domain types and rules
-   Acceptance: Domain tests pass
+1. tasks/model
+   Responsibility: Task creation behavior and its model test
+   Acceptance: Model test passes
 
-2. feature/api
-   Responsibility: API that uses the domain layer
-   Acceptance: API tests pass
+2. tasks/validation
+   Responsibility: Title validation and its tests
+   Acceptance: Model and validation tests pass
 
-3. feature/ui
-   Responsibility: UI that calls the API
-   Acceptance: UI and accessibility tests pass
+3. tasks/api
+   Responsibility: POST /tasks and API integration tests
+   Acceptance: Complete test suite passes
 ```
 
 A reviewer approves the boundaries before implementation begins.
@@ -82,7 +82,7 @@ The stack author owns synchronization. Before synchronizing:
 4. Run the applicable tests.
 5. Tell active reviewers that commit IDs and diffs may change.
 
-`gh stack rebase`, `gh stack push`, and `gh stack sync` can update commit history. Use them only on branches owned by the stack author and only under the team's agreed policy.
+`gh stack rebase` and `gh stack sync` can rewrite commit IDs. `gh stack push` sends the existing branch tips with force-with-lease protection. Use these commands only on branches owned by the stack author and under the team's agreed policy.
 
 ### Continuous integration
 
@@ -126,14 +126,4 @@ A stack is done when:
 
 ## AI coding agents
 
-Repository agents must follow the root [`AGENTS.md`](../AGENTS.md). The agent proposes the stack before coding, implements one tested layer at a time, and returns local verification evidence before publication.
-
-Use separate approval gates for:
-
-1. Local history rewrites such as `gh stack rebase`.
-2. Publishing draft pull requests with `gh stack submit --auto`.
-3. Marking verified drafts ready with `gh stack submit --auto --open`.
-4. Pushing or synchronizing revised branches.
-5. Merging with an explicit merge method.
-
-One local stack owner integrates contributions and verifies live GitHub state. GitHub Copilot cloud agent can plan, review, or contribute to one branch, but one cloud-agent task cannot own the complete multi-branch stack.
+Coding agents follow the root [`AGENTS.md`](../AGENTS.md): propose the stack before coding, implement one focused and tested layer at a time, return verification evidence before submission, and stop at approval boundaries. One stack owner remains responsible for integration and live GitHub verification. See the [agentic coding workflow](ai-agent-workflow.md).

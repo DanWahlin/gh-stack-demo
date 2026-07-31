@@ -43,7 +43,3 @@ Branches and pull requests below the current layer, closer to trunk.
 ## Force with lease
 
 A guarded history update that refuses to overwrite a remote branch when it has changed unexpectedly. `gh stack` uses this safeguard for operations that update rebased branches.
-
-## Atomic stack merge
-
-A merge operation in which GitHub merges every selected layer or merges none of them.

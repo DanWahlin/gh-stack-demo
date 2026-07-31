@@ -1,109 +1,75 @@
-#!/usr/bin/env bash
-set -euo pipefail
+# Build the canonical stack
 
-SOURCE_REPO="${SOURCE_REPO:-DanWahlin/gh-stacked-prs}"
-MODE=""
-VISIBILITY=""
-TARGET_REPO=""
-TARGET_DIR=""
+This tested procedure creates the same three-pull-request stack used by the live training example. It creates every required file, publishes `main`, builds and tests each layer, and submits the stack without a coding agent. It was validated with Node.js 24.18.0, Git 2.43.0, GitHub CLI 2.96.0, and `gh stack` 0.1.0.
 
-usage() {
-  cat <<'EOF'
-Create an isolated stacked-PR workshop repository.
+The commands use Bash or Zsh syntax. Before starting:
 
-Usage:
-  scripts/create-workshop-copy.sh OWNER/REPO --build (--public|--private) [--directory PATH]
-  scripts/create-workshop-copy.sh OWNER/REPO --ready (--public|--private) [--directory PATH]
+- Run `gh auth status` and confirm that GitHub CLI is authenticated.
+- Confirm that `git config user.name` and `git config user.email` return your Git identity.
+- Choose a repository name that does not already exist in your GitHub account.
+- Run the sequence from the directory where you want the new repository folder created.
 
-Modes:
-  --build   Copy main only. The learner creates the stack during the workshop.
-  --ready   Copy main, create all three layers, run tests, and submit the PR stack.
+## 1. Set the repository name and verify `gh stack`
 
-The target repository and local directory must not already exist. The script
-never deletes an existing repository or directory.
+```sh
+OWNER="$(gh api user --jq .login)"
+REPO="gh-stacked-prs-copy" # Change this if the name already exists.
+
+# Install the extension only when it is not already available.
+if ! gh stack --version >/dev/null 2>&1; then
+  gh extension install github/gh-stack
+fi
+```
+
+Avoid adding `--force` to the installation command. A forced upgrade depends on GitHub being able to resolve the latest extension release and is unnecessary when `gh stack` is already installed.
+
+## 2. Create and publish `main`
+
+```sh
+mkdir "$REPO"
+cd "$REPO"
+
+git init -b main
+
+cat > README.md <<'EOF'
+# GitHub Stacked PRs
+
+A tiny Node.js project built as three focused stacked pull requests.
 EOF
+
+cat > package.json <<'EOF'
+{
+  "name": "gh-stacked-prs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A tiny Node.js API for demonstrating GitHub Stacked PRs",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
 }
-
-fail() {
-  printf 'ERROR: %s\n' "$*" >&2
-  exit 1
-}
-
-while (($#)); do
-  case "$1" in
-    --build|--ready)
-      [[ -z "$MODE" ]] || fail "Choose only one mode."
-      MODE="${1#--}"
-      ;;
-    --public|--private)
-      [[ -z "$VISIBILITY" ]] || fail "Choose only one visibility."
-      VISIBILITY="$1"
-      ;;
-    --directory)
-      shift
-      (($#)) || fail "--directory requires a path."
-      TARGET_DIR="$1"
-      ;;
-    -h|--help)
-      usage
-      exit 0
-      ;;
-    -* )
-      fail "Unknown option: $1"
-      ;;
-    *)
-      [[ -z "$TARGET_REPO" ]] || fail "Only one OWNER/REPO target is allowed."
-      TARGET_REPO="$1"
-      ;;
-  esac
-  shift
-done
-
-[[ -n "$TARGET_REPO" ]] || fail "Provide the target as OWNER/REPO."
-[[ "$TARGET_REPO" == */* ]] || fail "Use the OWNER/REPO form."
-[[ -n "$MODE" ]] || fail "Choose --build or --ready."
-[[ -n "$VISIBILITY" ]] || fail "Choose --public or --private."
-
-for command in git node gh; do
-  command -v "$command" >/dev/null 2>&1 || fail "$command is required."
-done
-
-gh auth status >/dev/null
-gh stack --version >/dev/null
-
-git config user.name >/dev/null || fail "git user.name is not configured."
-git config user.email >/dev/null || fail "git user.email is not configured."
-
-if gh repo view "$TARGET_REPO" >/dev/null 2>&1; then
-  fail "Repository $TARGET_REPO already exists. Choose a new name."
-fi
-
-if [[ -z "$TARGET_DIR" ]]; then
-  TARGET_DIR="${TARGET_REPO#*/}"
-fi
-[[ ! -e "$TARGET_DIR" ]] || fail "Local path $TARGET_DIR already exists."
-
-printf 'Creating %s from template %s...\n' "$TARGET_REPO" "$SOURCE_REPO"
-gh repo create "$TARGET_REPO" "$VISIBILITY" --template "$SOURCE_REPO"
-gh repo clone "$TARGET_REPO" "$TARGET_DIR"
-
-cd "$TARGET_DIR"
-
-if [[ "$MODE" == "build" ]]; then
-  cat <<EOF
-
-Build-mode repository created:
-  https://github.com/$TARGET_REPO
-
-Next:
-  cd $TARGET_DIR
-  inspect AGENTS.md
-  open docs/workshop/README.md
-  start the workshop with the agent and CLI preflight
 EOF
-  exit 0
-fi
 
+git add README.md package.json
+git commit -m "chore: scaffold stacked PR demo"
+
+gh repo create "$OWNER/$REPO" \
+  --public \
+  --source=. \
+  --remote=origin \
+  --push
+```
+
+Publishing `main` before initializing the stack gives `gh stack` a remote and a default trunk branch to detect.
+
+## 3. Create the bottom layer: tested task model
+
+`gh stack init` creates `tasks/model` from `main`, records it as the first layer, and checks it out. This layer includes both the model and its unit test.
+
+```sh
 gh stack init --base main tasks/model
 
 mkdir -p src test
@@ -134,8 +100,15 @@ EOF
 npm test
 git add src/tasks.js test/tasks.model.test.js
 git commit -m "feat: add tested task model"
+```
 
+## 4. Add the middle layer: tested validation
+
+`gh stack add` creates the next branch from the current top layer. This layer introduces title validation and its unit tests.
+
+```sh
 gh stack add tasks/validation
+
 cat > src/tasks.js <<'EOF'
 export function validateTaskTitle(title) {
   if (typeof title !== 'string' || !title.trim()) {
@@ -175,8 +148,15 @@ EOF
 npm test
 git add src/tasks.js test/tasks.validation.test.js
 git commit -m "feat: add tested task validation"
+```
 
+## 5. Add the top layer: tested task API
+
+The top layer exposes the model and validation behavior through `POST /tasks`. It includes integration tests and a runnable `npm start` command.
+
+```sh
 gh stack add tasks/api
+
 cat > src/server.js <<'EOF'
 import { createServer } from 'node:http';
 import { pathToFileURL } from 'node:url';
@@ -285,15 +265,59 @@ EOF
 npm test
 git add package.json src/server.js test/tasks.api.test.js
 git commit -m "feat: add tested task API"
+```
 
+Each layer keeps its implementation and tests together and must pass before the next layer is created.
+
+The local branch chain is now:
+
+```text
+main
+└── tasks/model
+    └── tasks/validation
+        └── tasks/api
+```
+
+## 6. Test, inspect, and submit
+
+```sh
+npm test
 gh stack view --json
 gh stack submit --auto --open
-python scripts/verify-demo.py --repo "$TARGET_REPO"
+```
 
-cat <<EOF
+After submission, inspect the live pull requests:
 
-Ready-mode repository created and verified:
-  https://github.com/$TARGET_REPO
+1. The model pull request targets `main` from `tasks/model`.
+2. The validation pull request targets `tasks/model` from `tasks/validation`.
+3. The API pull request targets `tasks/validation` from `tasks/api`.
+4. All three pull requests are open, ready for review, focused, and linked as one stack.
 
-The three pull requests are open and ready for review. Their bases, heads, and changed files were verified, and the tests passed locally before submission.
-EOF
+`--auto` skips the interactive editor and derives pull request titles from the commits. `--open` marks new and existing pull requests ready for review. To edit titles, descriptions, and draft states interactively, use `gh stack submit` without those flags.
+
+The open training stack in this repository is continuously checked by the [training-resource verification workflow](https://github.com/DanWahlin/gh-stacked-prs/actions/workflows/verify-training-resource.yml).
+
+
+
+## Useful commands after submission
+
+```sh
+# Inspect the current stack and PR states.
+gh stack view
+
+# Move between adjacent layers.
+gh stack up
+gh stack down
+
+# Push committed changes on every stack branch.
+gh stack push
+
+# Fetch, rebase, push, and synchronize PR/stack state.
+gh stack sync
+
+# Rebase locally without performing the rest of a sync.
+gh stack rebase
+
+# Interactively land all or part of the stack.
+gh stack merge
+```

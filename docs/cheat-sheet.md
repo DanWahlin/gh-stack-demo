@@ -6,9 +6,9 @@ This reference matches the CLI help verified with `gh stack` 0.1.0.
 
 | Goal | Command | Effect |
 | --- | --- | --- |
-| Start a stack | `gh stack init feature/domain` | Creates or adopts the bottom branch |
-| Create several layers | `gh stack init domain api ui` | Creates or adopts branches from bottom to top |
-| Add a top layer | `gh stack add feature/ui` | Creates a branch above the current top layer |
+| Start a stack | `gh stack init --base main tasks/model` | Creates or adopts the bottom branch from an explicit trunk |
+| Create several layers | `gh stack init --base main tasks/model tasks/validation tasks/api` | Creates or adopts branches from bottom to top |
+| Add a top layer | `gh stack add tasks/api` | Creates a branch above the current top layer |
 | Inspect the stack | `gh stack view` | Shows branches and PR status |
 | Get machine-readable state | `gh stack view --json` | Returns stack data as JSON |
 | Move up or down | `gh stack up`, `gh stack down` | Checks out an adjacent active layer |
@@ -42,10 +42,10 @@ GitHub evaluates branch protection and repository rules during the merge. The co
 ## Safety model
 
 - `submit` creates or updates remote pull request state. `--auto` creates new drafts; `--open` marks pull requests ready.
-- `rebase` changes local commit IDs.
-- `push` and `sync` update remote branches and can change commit IDs.
+- `rebase` and `sync` can change commit IDs.
+- `push` updates remote branch tips with force-with-lease protection.
 - `merge` changes the trunk branch or enters the stack into a merge queue.
-- Agents must receive separate explicit approval before rebase, submission, push or sync, readiness changes, and merge.
+- Agents need explicit approval before rebase, submission, push or sync, draft-state changes, and merge.
 - Never use a plain force push. The extension uses force-with-lease safeguards where history updates are required.
 
 ## Status symbols

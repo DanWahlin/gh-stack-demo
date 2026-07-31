@@ -1,159 +1,95 @@
 # Agentic coding workflow for stacked PRs
 
-Repository instructions make stack planning and approval boundaries durable. Prompts define the current task. Optional skills can add command knowledge, but the workflow must remain usable when no specialized skill is installed.
+Use `AGENTS.md` for durable repository rules and a task prompt for the current feature. A specialized `gh-stack` skill is optional; the workflow must work without one.
 
-## Instruction model
+## Supported agent experiences
 
-The root [`AGENTS.md`](../AGENTS.md) is the shared baseline for this repository. Treat it as repository-level agent instructions, not as the agent platform's true system prompt.
+### GitHub Copilot CLI
 
-Before implementation, verify that the selected agent can:
-
-1. Read `AGENTS.md` or an equivalent project instruction file.
-2. Run Git, GitHub CLI, tests, and `gh stack` from the repository root.
-3. Stop before local history rewrites and remote operations.
-4. Return real command output instead of inferred success.
-
-A `gh-stack` skill is optional. If one is available, the agent may load it. The agent must still follow `AGENTS.md` when a skill is missing or conflicts with repository policy.
-
-## GitHub Copilot CLI
-
-GitHub Copilot CLI is the primary hands-on agent for the workshop because it works in the local repository where `gh stack` stores and uses the branch stack.
-
-Run:
+Start Copilot CLI from the repository root:
 
 ```sh
-copilot --version
 copilot
 ```
 
-In the interactive session, run `/instructions`. Verify that the root `AGENTS.md` appears. Use plan mode and restricted tool permissions for planning-only work. Do not grant broad automatic permissions merely to avoid approval prompts.
+Run `/instructions` and verify that `AGENTS.md` is loaded. Use plan mode or restricted permissions for planning-only work. Do not grant broad automatic permissions merely to avoid approval prompts.
 
-## GitHub Copilot cloud agent
+### GitHub Copilot desktop app
 
-GitHub Copilot cloud agent can research, plan, review, and make changes on one branch. A cloud-agent task can open one pull request and cannot own the complete multi-branch stack. A session also has a 59-minute execution limit.
+Open the repository in the [GitHub Copilot desktop app](https://github.com/features/ai/github-app). For the guided workshop, start a session in the **local repository** and reference `@AGENTS.md` in the first prompt.
 
-Good uses in this workflow include:
+The desktop app is available on macOS, Windows, and Linux. It can run sessions in isolated working trees, local repositories, or cloud sandboxes. It provides branch and file workspaces, diffs, an in-app browser, terminal validation, and GitHub pull request context. Repository and Copilot CLI skills and MCP servers are available in the app, but this workflow does not require additional customization.
 
-- Researching the repository and proposing stack boundaries
-- Reviewing one planned layer
-- Implementing one isolated contribution that a local stack owner will integrate
-- Reviewing live pull request diffs after submission
+### Other coding agents
 
-The local stack owner must integrate the contribution, create or adopt the stack branch, run the tests, inspect the diff, and verify local and live stack state. Cloud-agent branches do not carry the local stack owner's `.git/gh-stack` metadata.
+Other tools can be used when they:
 
-## Other coding agents
+1. Load `AGENTS.md` or equivalent repository instructions.
+2. Have terminal access to Git, GitHub CLI, tests, and `gh stack`.
+3. Stop before operations that require approval.
+4. Return real command output rather than inferred success.
 
-Codex, Claude Code, Gemini CLI, Cursor, and other agentic coding tools can be used when they pass the same instruction-loading and terminal-access preflight. Some tools use different default instruction filenames. Configure the tool to load `AGENTS.md`, or provide an equivalent project instruction file without weakening the approval rules.
+## Workflow
 
-## Prompt 1: Propose the stack
+### 1. Plan
 
 ```text
 Read AGENTS.md and inspect the repository. Do not modify files.
 
-Decide whether this work belongs in one stack, separate stacks, or a normal
-pull request. Return:
-
-1. Trunk branch.
-2. Branches ordered from bottom to top.
-3. Responsibility, exclusions, and acceptance criteria for each pull request.
-4. Tests required in each layer.
-5. Exact gh stack and verification commands.
-6. Every operation that requires separate approval.
-
-Wait for approval before implementation.
+Decide whether this work belongs in one stack, separate stacks, or a normal pull
+request. Return the trunk, branch order, responsibility and exclusions for each
+pull request, tests for each layer, exact gh stack commands, and final
+verification commands. Wait for approval before implementation.
 ```
 
-## Prompt 2: Implement one approved layer
+### 2. Implement one layer
 
 ```text
-Implement only <branch-name> above <parent-branch>.
+Implement only <branch> above <parent>.
 
-1. Create the layer with the approved gh stack command.
-2. Add or update the layer tests first.
-3. Run the tests and observe the expected failure when practical.
-4. Implement only this layer's approved behavior.
-5. Run the layer tests and applicable accumulated tests.
-6. Inspect the diff against the parent branch.
-7. Commit the implementation and tests together.
+Create the approved stack layer, implement only the approved behavior and its
+tests, run the tests, inspect the diff against the parent, and commit the
+implementation and tests together.
 
-Stop after the local commit. Do not rebase or perform remote operations.
+Stop after the local commit. Do not push, submit, synchronize, or merge.
 ```
 
-Repeat this prompt from bottom to top. Do not ask one agent to interleave independent workstreams in one checkout.
+Repeat from the bottom layer to the top. Use one write-capable agent per checkout or worktree.
 
-## Prompt 3: Verify before publication
+### 3. Verify
 
 ```text
 Do not change files or perform remote operations.
 
-Return:
-
-1. gh stack view --json.
-2. Branch ancestry.
-3. Parent-to-child diff and changed-file summary for every layer.
-4. Layer-specific test results.
-5. Full-stack test results from the top layer.
-6. Any conflict, deviation, unexpected prompt, or unverified assumption.
-
-Stop after reporting the evidence.
+Return gh stack view --json, branch ancestry, base and head for every planned
+pull request, parent-to-child changed files, layer-specific test results, the
+full test result from the top layer, and any deviation or unverified assumption.
 ```
 
-## Prompt 4: Publish drafts
+### 4. Submit
 
-Use this prompt only after a human explicitly approves remote draft publication:
+After a human approves the evidence, run or authorize:
 
-```text
-You are approved to run gh stack submit --auto for this stack only.
-Do not mark pull requests ready and do not merge.
-
-After submission, inspect the live pull requests and report each PR's URL,
-draft state, base, head, changed files, and stack linkage. Stop if the live
-state differs from the approved proposal.
+```sh
+gh stack submit --auto --open
 ```
 
-`gh stack submit --auto` creates new pull requests as drafts. Command success alone is not proof that the live stack is correct.
+Then inspect the live pull requests. Verify every base, head, changed-file list, readiness state, and stack relationship. Do not claim remote success from command exit status alone.
 
-## Prompt 5: Mark the stack ready
+### 5. Respond to feedback
 
-Use this prompt only after a separate human approval:
+When a lower layer changes:
 
-```text
-You are approved to run gh stack submit --auto --open for this verified stack.
-Do not merge.
+1. Update and test that layer.
+2. Commit the correction.
+3. Get approval before `gh stack rebase`.
+4. Run the full tests from the top layer and inspect every diff.
+5. Get approval before `gh stack push` or `gh stack sync`.
+6. Inspect every live pull request after the update.
 
-After the command, inspect every live pull request and verify that its ready
-state, base, head, changed files, and stack linkage remain correct.
-```
+## Independent workstreams
 
-## Prompt 6: Respond to lower-layer feedback
-
-```text
-Move to <lower-branch>. Implement only the approved review correction, update
-its tests, run the layer tests, and commit locally.
-
-Then report gh stack view --json and stop. Do not run gh stack rebase, push,
-sync, or merge until each operation receives explicit approval.
-```
-
-After approval to rebase, the agent must rerun the full tests from the top layer and verify every diff. After separate approval to push or synchronize, it must inspect every live pull request again.
-
-## Verification contract
-
-Before requesting approval to publish drafts, the agent returns:
-
-- `gh stack view --json`
-- Branch ancestry verification
-- Base and head for every planned pull request
-- Layer-specific test results
-- Full-stack test results from the top layer
-- A file and commit summary for every layer
-- Any conflicts, deviations, or unverified assumptions
-
-After every remote or structural change, verify the live pull requests. Do not claim remote success until GitHub state has been inspected.
-
-## Worktree pattern
-
-Use separate worktrees for independent stacks:
+Use separate worktrees and stacks for unrelated features:
 
 ```text
 worktrees/authentication  → authentication stack
@@ -161,4 +97,17 @@ worktrees/billing         → billing stack
 worktrees/notifications   → notifications stack
 ```
 
-Use one write-capable agent per worktree. A planning or review agent may inspect another worktree in read-only mode.
+Do not ask one agent to interleave independent features in one stack merely because they belong to the same project.
+
+## Verification contract
+
+Before submission, the agent returns:
+
+- `gh stack view --json`.
+- Branch ancestry.
+- Base, head, commit, and changed files for every planned pull request.
+- Layer-specific test results.
+- Full-stack test results from the top layer.
+- Conflicts, deviations, and unverified assumptions.
+
+After every approved remote or structural change, verify the live GitHub state again.
