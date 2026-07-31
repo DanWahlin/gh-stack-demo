@@ -4,10 +4,19 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 15 * * 1"
+  pull_request:
+    paths:
+      - "README.md"
+      - "CONTRIBUTING.md"
+      - "AGENTS.md"
+      - "docs/**"
+      - "scripts/**"
+      - ".github/workflows/verify-training-resource.yml"
   push:
     branches: [main]
     paths:
       - "README.md"
+      - "CONTRIBUTING.md"
       - "AGENTS.md"
       - "docs/**"
       - "scripts/**"
@@ -40,21 +49,33 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: gh extension install github/gh-stack
 
+      - name: Verify gh-stack command contract
+        run: python scripts/check-cli-contract.py
+
       - name: Verify the canonical live stack
         env:
           GH_TOKEN: ${{ github.token }}
         run: python scripts/verify-demo.py
 
-  top-layer-tests:
+  layer-tests:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - branch: tasks/model
+            layer: model
+          - branch: tasks/validation
+            layer: validation
+          - branch: tasks/api
+            layer: complete stack
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: tasks/api
+          ref: ${{ matrix.branch }}
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Run complete stack tests
+      - name: Run ${{ matrix.layer }} tests
         run: npm test

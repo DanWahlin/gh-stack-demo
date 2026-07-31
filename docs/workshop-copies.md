@@ -16,7 +16,7 @@ gh-stacked-prs/scripts/create-workshop-copy.sh \
   --private
 ```
 
-The script creates a standalone repository from `main` and clones it locally. The learner then follows [`workshop/README.md`](workshop/README.md) to create and submit the stack.
+The script creates a standalone repository from `main` and clones it locally. The copy includes root `AGENTS.md`, which provides stack rules and approval boundaries to compatible coding agents. Before implementation, learners inspect `AGENTS.md` and then follow the [agentic workshop](workshop/README.md).
 
 Use a unique repository name. Change `--private` to `--public` only when the learner intends to publish the exercise.
 
@@ -35,8 +35,8 @@ gh-stacked-prs/scripts/create-workshop-copy.sh \
 Ready mode:
 
 1. Creates a standalone repository from the template.
-2. Creates the model, validation, and test branches.
-3. Commits one focused change per branch.
+2. Creates the model, validation, and API branches.
+3. Commits one focused implementation-and-test change per branch.
 4. Runs the complete tests.
 5. Submits three open, ready-for-review pull requests.
 6. Verifies each PR's base, head, draft state, and changed files.

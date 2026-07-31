@@ -20,9 +20,10 @@ This reference matches the CLI help verified with `gh stack` 0.1.0.
 | Goal | Command | Important behavior |
 | --- | --- | --- |
 | Submit PRs interactively | `gh stack submit` | Pushes branches and opens the PR editor |
-| Submit non-interactively | `gh stack submit --auto --open` | Generates titles and marks PRs ready |
+| Submit drafts non-interactively | `gh stack submit --auto` | Generates titles and creates new pull requests as drafts |
+| Mark the submitted stack ready | `gh stack submit --auto --open` | Marks new and existing pull requests ready for review |
 | Push existing branches | `gh stack push` | Uses per-branch force-with-lease checks |
-| Synchronize everything | `gh stack sync` | Fetches, cascade-rebases, atomically pushes, and syncs PR state |
+| Synchronize everything | `gh stack sync` | Fetches, cascade-rebases, pushes, and syncs pull request state; verify every branch afterward |
 | Prune merged local branches | `gh stack sync --prune` | Removes local branches for merged PRs |
 | Rebase locally | `gh stack rebase` | Cascade-rebases the stack |
 | Abort a conflicted rebase | `gh stack rebase --abort` | Restores branches to their original state |
@@ -33,17 +34,18 @@ This reference matches the CLI help verified with `gh stack` 0.1.0.
 | Goal | Command | Important behavior |
 | --- | --- | --- |
 | Choose interactively | `gh stack merge` | Selects how far up the stack to merge |
-| Merge through a PR | `gh stack merge 42` | Atomically merges all layers through PR #42 |
-| Merge non-interactively | `gh stack merge --yes --squash` | Merges the whole stack using squash |
+| Merge through a PR | `gh stack merge 42` | Requests a stack merge through PR #42 |
+| Merge non-interactively | `gh stack merge --yes --squash` | Requests a squash merge of the whole stack without prompting |
 
-GitHub evaluates branch protection and repository rules during the merge. The command does not bypass requirements.
+GitHub evaluates branch protection and repository rules during the merge. The command does not bypass requirements. If the repository uses a merge queue, GitHub controls when each queued layer completes; verify the final state instead of assuming simultaneous completion.
 
 ## Safety model
 
-- `submit` creates or updates remote PR state.
-- `push`, `sync`, and `rebase` may change commit IDs.
-- `merge` changes the trunk branch.
-- Agents must receive explicit approval before remote submission, push, or merge.
+- `submit` creates or updates remote pull request state. `--auto` creates new drafts; `--open` marks pull requests ready.
+- `rebase` changes local commit IDs.
+- `push` and `sync` update remote branches and can change commit IDs.
+- `merge` changes the trunk branch or enters the stack into a merge queue.
+- Agents must receive separate explicit approval before rebase, submission, push or sync, readiness changes, and merge.
 - Never use a plain force push. The extension uses force-with-lease safeguards where history updates are required.
 
 ## Status symbols

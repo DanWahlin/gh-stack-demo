@@ -11,7 +11,7 @@ A tiny Node.js task API built as three focused pull requests to demonstrate [Git
 - **5 minutes:** Read [How stacked PRs work](#how-stacked-prs-work).
 - **15 minutes:** Follow the [live-stack review walkthrough](docs/review-walkthrough.md).
 - **30 minutes:** Follow [Commands used to create this demo](#commands-used-to-create-this-demo).
-- **45–60 minutes:** [Create an isolated workshop repository](docs/workshop-copies.md), then run the [team workshop](docs/workshop/README.md).
+- **60 minutes:** [Create an isolated workshop repository](docs/workshop-copies.md) as prework, then run the [core agentic workshop](docs/workshop/README.md). Add 15 minutes for the review-feedback and adoption extension.
 - **Team leads:** Adapt the [team playbook](docs/team-playbook.md) and [full lifecycle](docs/lifecycle.md).
 - **Facilitators:** Use the [presentation and facilitator guide](docs/facilitator-guide.md).
 - **AI-assisted teams:** Configure the [AI-agent workflow](docs/ai-agent-workflow.md).
@@ -83,29 +83,25 @@ gh extension install github/gh-stack
 
 ## Use stacked PRs with an AI coding agent
 
-This repository includes an [`AGENTS.md`](AGENTS.md) rule that helps coding agents decide whether a substantial multi-part change belongs in a stacked pull request workflow.
+The root [`AGENTS.md`](AGENTS.md) gives coding agents the stack-selection rules, minimum `gh stack` command contract, test boundaries, approval gates, and live-verification requirements. The workflow does not require a specialized skill.
 
-For the best results, make the `gh-stack` skill available to your coding agent. Ask the agent to load the skill before it plans or implements the change. Then start with a prompt such as:
-
-```text
-Build authentication, its API endpoints, and the account UI. Before coding,
-inspect the repository and decide whether this should be a gh-stack. Show me
-the proposed branch stack and verification boundary for each pull request.
-Wait for my approval before implementing, pushing branches, or submitting
-pull requests.
-```
-
-Use one stack when the changes form a linear dependency chain:
+GitHub Copilot CLI is the primary hands-on agent because it works in the local repository that owns the branches and stack metadata. Start Copilot CLI from the repository root, run `/instructions`, and verify that `AGENTS.md` is loaded. Then begin with a planning-only prompt:
 
 ```text
-main
-└── auth/domain-model
-    └── auth/api
-        └── auth/account-ui
-            └── auth/e2e-tests
+Read AGENTS.md and inspect the repository. Do not modify files.
+
+Decide whether the requested work belongs in one stack, separate stacks, or a
+normal pull request. Show the trunk, branch order, responsibility and tests for
+each pull request, exact gh stack commands, and every approval gate.
+
+Wait for approval before implementation.
 ```
 
-Use separate stacks, preferably in separate worktrees, for independent features. Use a normal branch and pull request for a small isolated change. The repository's `AGENTS.md` contains the complete decision and safety rules for coding agents.
+GitHub Copilot cloud agent can research, plan, review, or contribute to one isolated branch. One cloud-agent task cannot create the complete multi-branch stack because it works on one branch and opens one pull request. A local stack owner must integrate and verify its contribution.
+
+Other agentic coding tools can be used when they load `AGENTS.md` or equivalent repository instructions, have terminal access, and follow the same approval boundaries. A `gh-stack` skill can add convenience when available, but the repository remains self-contained without it.
+
+Use separate approval gates for local history rewrites, draft publication, readiness, remote synchronization, and merge. See the [agentic coding workflow](docs/ai-agent-workflow.md) and [hands-on workshop](docs/workshop/README.md) for tested prompts and checkpoints.
 
 ## Commands used to create this demo
 
@@ -179,7 +175,7 @@ Publishing `main` before initializing the stack gives `gh stack` a remote and a 
 `gh stack init` creates `tasks/model` from `main`, records it as the first layer, and checks it out. This layer includes both the model and its unit test.
 
 ```sh
-gh stack init tasks/model
+gh stack init --base main tasks/model
 
 mkdir -p src test
 cat > src/tasks.js <<'EOF'
@@ -387,24 +383,29 @@ main
         └── tasks/api
 ```
 
-### 6. Test, inspect, and submit
+### 6. Test, inspect, publish drafts, and mark ready
 
 ```sh
 npm test
 gh stack view
+gh stack submit --auto
+```
+
+`gh stack submit --auto` pushes all three branches, creates three draft pull requests with generated titles, and links them as one GitHub stack:
+
+1. The model pull request targets `main` from `tasks/model`.
+2. The validation pull request targets `tasks/model` from `tasks/validation`.
+3. The API pull request targets `tasks/validation` from `tasks/api`.
+
+Inspect the live drafts. Verify their bases, heads, changed files, draft states, and stack linkage. When the stack is correct and you are ready to request review, run:
+
+```sh
 gh stack submit --auto --open
 ```
 
-`gh stack submit --auto --open` performs the GitHub-side work in one operation:
+Inspect the pull requests again. Verify that all three are ready for review and that their bases, heads, changed files, and stack linkage did not change.
 
-1. Pushes all three branches.
-2. Creates PR #1 from `tasks/model` into `main`.
-3. Creates PR #2 from `tasks/validation` into `tasks/model`.
-4. Creates PR #3 from `tasks/api` into `tasks/validation`.
-5. Links the three PRs as one GitHub stack.
-6. Marks all three PRs ready for review rather than draft.
-
-`--auto` skips the interactive editor and derives PR titles from the commits. `--open` is important with `--auto` because automatically submitted PRs otherwise default to drafts. To edit each title, description, and draft state interactively, use `gh stack submit` without those flags.
+`--auto` skips the interactive editor and derives pull request titles from the commits. New pull requests default to drafts unless `--open` is present. To edit each title, description, and draft state interactively, use `gh stack submit` without those flags.
 
 The open training stack in this repository is continuously checked by the [training-resource verification workflow](https://github.com/DanWahlin/gh-stacked-prs/actions/workflows/verify-training-resource.yml).
 
@@ -417,17 +418,19 @@ Create a working GitHub Stacked PRs sample based on this repository:
 
 https://github.com/DanWahlin/gh-stacked-prs
 
-You are authorized to create one new public repository in my currently
-authenticated GitHub account and open three pull requests. Leave all pull
-requests open. Do not modify the source repository.
+Begin with a planning-only phase. Read the source README and AGENTS.md, propose
+the trunk, three branch boundaries, tests, commands, repository name, and
+approval gates, then stop. Do not create a repository, modify files, push,
+or open pull requests until I approve the plan and explicitly authorize
+private repository setup and local implementation.
 
 Use the live README in the source repository as the source of truth:
 
 1. Retrieve the README from the main branch.
-2. Find the section titled "Commands used to create this demo."
-3. Read the entire section before making changes.
-4. Follow that process from start to finish rather than relying on your
-   existing knowledge of gh stack.
+2. Read the entire "Commands used to create this demo" section.
+3. Follow that process, with these safety changes:
+   - Create the new repository as private rather than public.
+   - Submit with gh stack submit --auto rather than --auto --open.
 
 Create the new repository in a separate, empty directory.
 
@@ -435,9 +438,8 @@ Use this repository name:
 
 gh-stacked-prs-copy
 
-If that name already exists in my GitHub account, append a short timestamp
-to make it unique. Do not delete, overwrite, rename, or reuse an existing
-repository.
+If that name already exists in my GitHub account, append a short timestamp.
+Do not delete, overwrite, rename, or reuse an existing repository.
 
 Before starting, verify:
 
@@ -448,21 +450,26 @@ Before starting, verify:
 - gh stack is available. If it is not available, install it with:
   gh extension install github/gh-stack
 
-Then execute the README workflow to:
+After I approve the plan and explicitly authorize private repository setup and
+local implementation, execute the README workflow to:
 
-- Create and publish the main branch.
+- Create and publish the private repository's main branch.
 - Create tasks/model as the bottom stack layer.
 - Create tasks/validation as the middle layer.
 - Create tasks/api as the top layer.
-- Commit the focused change on each branch.
-- Run the Node.js tests.
+- Commit the focused implementation and tests on each branch.
+- Run the Node.js tests on every layer.
 - Inspect the local stack.
-- Submit all three pull requests with:
-  gh stack submit --auto --open
+
+Stop and return the local evidence. Wait for separate approval to publish the
+draft pull requests. After that approval, run:
+
+gh stack submit --auto
 
 Do not:
 
 - Modify the source repository.
+- Mark any pull request ready for review.
 - Merge or close any pull request.
 - Force-push or rewrite Git history.
 - Delete any repository or branch.
@@ -477,21 +484,25 @@ After submission, verify all of the following:
    └── tasks/model
        └── tasks/validation
            └── tasks/api
-3. PR #1 targets main from tasks/model.
-4. PR #2 targets tasks/model from tasks/validation.
-5. PR #3 targets tasks/validation from tasks/api.
-6. All three PRs are open and ready for review, not drafts.
-7. gh stack view shows the three PRs as one linked stack.
-8. Each PR contains only its intended focused change.
+3. The model pull request targets main from tasks/model.
+4. The validation pull request targets tasks/model from tasks/validation.
+5. The API pull request targets tasks/validation from tasks/api.
+6. All three pull requests are open and draft.
+7. gh stack view shows the three pull requests as one linked stack.
+8. Each pull request contains only its intended focused change.
 
 When finished, return:
 
-- The new repository URL.
+- The new private repository URL.
 - The GitHub stack number.
 - Links to all three pull requests.
-- The test result.
-- The verified base and head branch for each PR.
+- The test result from every layer.
+- The verified base, head, changed files, and draft state for each pull request.
 - Any deviations from the source README or blockers encountered.
+
+Stop after reporting the drafts. Wait for separate approval before running:
+
+gh stack submit --auto --open
 
 If a required tool, authentication, or permission is unavailable, stop and
 report the exact blocker. Do not fabricate commands, URLs, test results, or

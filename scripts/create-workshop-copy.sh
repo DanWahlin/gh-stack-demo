@@ -97,8 +97,9 @@ Build-mode repository created:
 
 Next:
   cd $TARGET_DIR
+  inspect AGENTS.md
   open docs/workshop/README.md
-  start with: gh stack init tasks/model
+  start the workshop with the agent and CLI preflight
 EOF
   exit 0
 fi

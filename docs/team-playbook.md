@@ -46,9 +46,9 @@ Start with two to five pull requests. Split larger stacks when reviewers cannot 
 Use one feature prefix across the stack:
 
 ```text
-orders/domain-model
-orders/api
-orders/admin-ui
+tasks/model
+tasks/validation
+tasks/api
 ```
 
 Names describe responsibility, not sequence numbers. The stack graph already communicates order.
@@ -90,7 +90,7 @@ Run required checks on every PR. A lower layer must not depend on files that exi
 
 ### Merge policy
 
-Merge from the bottom through the approved layer. `gh stack merge` performs an atomic stack merge up to the selected PR, subject to GitHub branch protection and repository rules. Require explicit approval before invoking it.
+Request the merge from the bottom through the approved layer with an explicit merge method. `gh stack merge` submits the selected layers as one stack merge operation, subject to GitHub branch protection and repository rules. If the repository uses a merge queue, GitHub controls when queued layers complete. Require explicit approval and verify final GitHub state instead of assuming simultaneous completion.
 
 ### Independent workstreams
 
@@ -126,4 +126,14 @@ A stack is done when:
 
 ## AI coding agents
 
-Repository agents must follow the root [`AGENTS.md`](../AGENTS.md). Agents propose the stack before coding and stop before pushing, submitting PRs, or merging unless a human explicitly approves the action.
+Repository agents must follow the root [`AGENTS.md`](../AGENTS.md). The agent proposes the stack before coding, implements one tested layer at a time, and returns local verification evidence before publication.
+
+Use separate approval gates for:
+
+1. Local history rewrites such as `gh stack rebase`.
+2. Publishing draft pull requests with `gh stack submit --auto`.
+3. Marking verified drafts ready with `gh stack submit --auto --open`.
+4. Pushing or synchronizing revised branches.
+5. Merging with an explicit merge method.
+
+One local stack owner integrates contributions and verifies live GitHub state. GitHub Copilot cloud agent can plan, review, or contribute to one branch, but one cloud-agent task cannot own the complete multi-branch stack.

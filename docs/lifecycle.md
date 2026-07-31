@@ -20,41 +20,54 @@ gh stack view --json
 
 Verify ancestry, bases, heads, and focused diffs.
 
-## 4. Submit
+## 4. Publish drafts
 
-After approval, submit interactively or run:
+After explicit approval for remote draft publication, run:
+
+```sh
+gh stack submit --auto
+```
+
+Inspect the live draft pull requests. Verify stack linkage, bases, heads, changed files, and draft state. Do not treat successful command exit as proof that every pull request is correct.
+
+## 5. Mark ready
+
+After a separate approval, run:
 
 ```sh
 gh stack submit --auto --open
 ```
 
-Inspect the live GitHub state. Do not treat successful command exit as proof that every PR is correct.
+Inspect GitHub again and verify that every pull request is ready, correctly based, and still focused.
 
-## 5. Review
+## 6. Review
 
 Review from bottom to top. Resolve lower-layer design issues before approving dependent layers.
 
-## 6. Revise
+## 7. Revise
 
 When a lower layer changes:
 
 1. Check out that layer.
 2. Make the smallest focused correction.
 3. Run its tests and commit.
-4. Cascade-rebase the stack with `gh stack rebase`.
-5. Run the full tests from the top.
-6. Verify every diff again.
-7. Push only after approval.
+4. Request approval before rewriting local stack history.
+5. After approval, cascade-rebase the stack with `gh stack rebase`.
+6. Run the full tests from the top.
+7. Verify every diff again.
+8. Request separate approval before pushing or synchronizing.
 
-## 7. Synchronize
+Run `gh stack rebase --abort` if conflict resolution is uncertain.
 
-Use `gh stack sync` when the stack must reconcile remote changes, update trunk, cascade-rebase branches, push them atomically, and synchronize PR state. Stop if local and remote stack definitions have diverged and no source of truth has been agreed.
+## 8. Synchronize
 
-## 8. Merge
+Use `gh stack sync` only after approval when the stack must reconcile remote changes, update trunk, cascade-rebase branches, push them, and synchronize pull request state. Stop if local and remote stack definitions have diverged and no source of truth has been agreed. Verify every remote branch and pull request afterward.
 
-`gh stack merge` merges all approved layers through the selected PR as one atomic operation. GitHub still enforces required checks, reviews, merge queues, and repository rules.
+## 9. Merge
 
-## 9. Clean up
+Use an explicit merge method for non-interactive operation, such as `gh stack merge --yes --squash`. GitHub still enforces required checks, reviews, merge queues, and repository rules. Get explicit approval and verify the final GitHub state; do not assume queued layers merge simultaneously.
+
+## 10. Clean up
 
 After merge, confirm trunk CI passes. Use the team's branch-retention policy. `gh stack sync --prune` can remove local branches for merged PRs while preserving stack metadata needed by the extension.
 
