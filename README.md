@@ -1,4 +1,4 @@
-# GitHub Stacked PRs
+# Learn GitHub Stacked PRs
 
 <p align="center">
   <img src="images/gh-stacked-prs.png" alt="Three dependent pull requests shown as a stack" width="350" height="344">
