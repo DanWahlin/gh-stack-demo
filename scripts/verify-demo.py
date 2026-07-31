@@ -11,17 +11,17 @@ import sys
 EXPECTED = [
     {
         "base": "main",
-        "head": "training/task-model",
+        "head": "workshop/task-model",
         "files": ["src/tasks.js"],
     },
     {
-        "base": "training/task-model",
-        "head": "training/task-validation",
+        "base": "workshop/task-model",
+        "head": "workshop/task-validation",
         "files": ["src/tasks.js"],
     },
     {
-        "base": "training/task-validation",
-        "head": "training/task-tests",
+        "base": "workshop/task-validation",
+        "head": "workshop/task-tests",
         "files": ["test/tasks.test.js"],
     },
 ]

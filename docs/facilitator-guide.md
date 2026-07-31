@@ -25,6 +25,28 @@ Use the repository's [PowerPoint deck](../github-stacked-prs.pptx) with this gui
 
 Run the exercises from [`workshop/README.md`](workshop/README.md).
 
+## Prepare learner repositories
+
+Use build mode for the full workshop. Each learner creates the stack:
+
+```sh
+scripts/create-workshop-copy.sh \
+  YOUR-OWNER/my-stacked-prs-workshop \
+  --build \
+  --private
+```
+
+Use ready mode for a shortened session, facilitator rehearsal, or learner recovery. It recreates the three PRs and verifies them:
+
+```sh
+scripts/create-workshop-copy.sh \
+  YOUR-OWNER/my-ready-stacked-prs-workshop \
+  --ready \
+  --private
+```
+
+Do not use forks. Forks do not copy the pull requests or GitHub stack relationship. See [Create a workshop repository](workshop-copies.md) for the complete setup contract.
+
 ## Demo preflight
 
 Complete these checks before the session:
@@ -32,9 +54,9 @@ Complete these checks before the session:
 ```sh
 gh auth status
 gh stack --version
-gh pr list --repo DanWahlin/gh-stacked-prs-demo --state open --head training/task-model --json number,baseRefName,headRefName,files
-gh pr list --repo DanWahlin/gh-stacked-prs-demo --state open --head training/task-validation --json number,baseRefName,headRefName,files
-gh pr list --repo DanWahlin/gh-stacked-prs-demo --state open --head training/task-tests --json number,baseRefName,headRefName,files
+gh pr list --repo DanWahlin/gh-stacked-prs-demo --state open --head workshop/task-model --json number,baseRefName,headRefName,files
+gh pr list --repo DanWahlin/gh-stacked-prs-demo --state open --head workshop/task-validation --json number,baseRefName,headRefName,files
+gh pr list --repo DanWahlin/gh-stacked-prs-demo --state open --head workshop/task-tests --json number,baseRefName,headRefName,files
 ```
 
 Verify that the three PRs are open, ready for review, and focused. Keep screenshots available in case network access fails.

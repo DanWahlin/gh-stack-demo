@@ -11,7 +11,7 @@ A tiny Node.js task API built as three focused pull requests to demonstrate [Git
 - **5 minutes:** Read [How stacked PRs work](#how-stacked-prs-work).
 - **15 minutes:** Follow the [live-stack review walkthrough](docs/review-walkthrough.md).
 - **30 minutes:** Follow [Commands used to create this demo](#commands-used-to-create-this-demo).
-- **45–60 minutes:** Run the [team workshop](docs/workshop/README.md).
+- **45–60 minutes:** [Create an isolated workshop repository](docs/workshop-copies.md), then run the [team workshop](docs/workshop/README.md).
 - **Team leads:** Adapt the [team playbook](docs/team-playbook.md) and [full lifecycle](docs/lifecycle.md).
 - **Facilitators:** Use the [presentation and facilitator guide](docs/facilitator-guide.md).
 - **AI-assisted teams:** Configure the [AI-agent workflow](docs/ai-agent-workflow.md).
@@ -55,9 +55,9 @@ Need to bring your team up to speed on GitHub Stacked PRs? [Download the latest 
 
 ## Planned stack
 
-1. [`training/task-model`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Atraining%2Ftask-model) adds the task model.
-2. [`training/task-validation`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Atraining%2Ftask-validation) adds title validation.
-3. [`training/task-tests`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Atraining%2Ftask-tests) adds tests for both layers.
+1. [`workshop/task-model`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-model) adds the task model.
+2. [`workshop/task-validation`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-validation) adds title validation.
+3. [`workshop/task-tests`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-tests) adds tests for both layers.
 
 Each PR targets the branch below it, so reviewers see only that layer's changes.
 
@@ -176,10 +176,10 @@ Publishing `main` before initializing the stack gives `gh stack` a remote and a 
 
 ### 3. Create the bottom layer: task model
 
-`gh stack init` creates `training/task-model` from `main`, records it as the first layer, and checks it out.
+`gh stack init` creates `workshop/task-model` from `main`, records it as the first layer, and checks it out.
 
 ```sh
-gh stack init training/task-model
+gh stack init workshop/task-model
 
 mkdir -p src
 cat > src/tasks.js <<'EOF'
@@ -201,7 +201,7 @@ git commit -m "feat: add task model"
 `gh stack add` creates the next branch from the current top layer and checks it out.
 
 ```sh
-gh stack add training/task-validation
+gh stack add workshop/task-validation
 
 cat >> src/tasks.js <<'EOF'
 
@@ -217,7 +217,7 @@ git commit -m "feat: validate task titles"
 ### 5. Add the top layer: tests
 
 ```sh
-gh stack add training/task-tests
+gh stack add workshop/task-tests
 
 mkdir -p test
 cat > test/tasks.test.js <<'EOF'
@@ -246,9 +246,9 @@ The local branch chain is now:
 
 ```text
 main
-└── training/task-model
-    └── training/task-validation
-        └── training/task-tests
+└── workshop/task-model
+    └── workshop/task-validation
+        └── workshop/task-tests
 ```
 
 ### 6. Test, inspect, and submit
@@ -262,9 +262,9 @@ gh stack submit --auto --open
 `gh stack submit --auto --open` performs the GitHub-side work in one operation:
 
 1. Pushes all three branches.
-2. Creates PR #1 from `training/task-model` into `main`.
-3. Creates PR #2 from `training/task-validation` into `training/task-model`.
-4. Creates PR #3 from `training/task-tests` into `training/task-validation`.
+2. Creates PR #1 from `workshop/task-model` into `main`.
+3. Creates PR #2 from `workshop/task-validation` into `workshop/task-model`.
+4. Creates PR #3 from `workshop/task-tests` into `workshop/task-validation`.
 5. Links the three PRs as one GitHub stack.
 6. Marks all three PRs ready for review rather than draft.
 
@@ -315,9 +315,9 @@ Before starting, verify:
 Then execute the README workflow to:
 
 - Create and publish the main branch.
-- Create training/task-model as the bottom stack layer.
-- Create training/task-validation as the middle layer.
-- Create training/task-tests as the top layer.
+- Create workshop/task-model as the bottom stack layer.
+- Create workshop/task-validation as the middle layer.
+- Create workshop/task-tests as the top layer.
 - Commit the focused change on each branch.
 - Run the Node.js tests.
 - Inspect the local stack.
@@ -338,12 +338,12 @@ After submission, verify all of the following:
 1. The tests pass.
 2. The branch ancestry is:
    main
-   └── training/task-model
-       └── training/task-validation
-           └── training/task-tests
-3. PR #1 targets main from training/task-model.
-4. PR #2 targets training/task-model from training/task-validation.
-5. PR #3 targets training/task-validation from training/task-tests.
+   └── workshop/task-model
+       └── workshop/task-validation
+           └── workshop/task-tests
+3. PR #1 targets main from workshop/task-model.
+4. PR #2 targets workshop/task-model from workshop/task-validation.
+5. PR #3 targets workshop/task-validation from workshop/task-tests.
 6. All three PRs are open and ready for review, not drafts.
 7. gh stack view shows the three PRs as one linked stack.
 8. Each PR contains only its intended focused change.

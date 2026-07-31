@@ -30,6 +30,11 @@ jobs:
       - name: Check documentation
         run: python scripts/check-docs.py
 
+      - name: Check workshop copy script
+        run: |
+          bash -n scripts/create-workshop-copy.sh
+          shellcheck scripts/create-workshop-copy.sh
+
       - name: Install gh-stack
         env:
           GH_TOKEN: ${{ github.token }}
@@ -45,7 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: training/task-tests
+          ref: workshop/task-tests
 
       - uses: actions/setup-node@v4
         with:

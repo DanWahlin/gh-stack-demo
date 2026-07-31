@@ -16,6 +16,8 @@ Run:
 ```sh
 python scripts/check-docs.py
 python scripts/verify-demo.py
+bash -n scripts/create-workshop-copy.sh
+shellcheck scripts/create-workshop-copy.sh
 ```
 
 ## Validate code examples

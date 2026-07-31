@@ -6,19 +6,19 @@ Use the open training stack in [this repository](https://github.com/DanWahlin/gh
 
 ```text
 main
-└── training/task-model
-    └── training/task-validation
-        └── training/task-tests
+└── workshop/task-model
+    └── workshop/task-validation
+        └── workshop/task-tests
 ```
 
 ## Bottom PR: Task model
 
-Open the pull request whose head branch is [`training/task-model`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Atraining%2Ftask-model).
+Open the pull request whose head branch is [`workshop/task-model`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-model).
 
 Verify:
 
 - Base: `main`
-- Head: `training/task-model`
+- Head: `workshop/task-model`
 - Changed file: `src/tasks.js`
 - Responsibility: Create a task with an ID, title, and incomplete state
 
@@ -32,12 +32,12 @@ The team must answer this boundary question before approving higher layers.
 
 ## Middle PR: Validation
 
-Open the pull request whose head branch is [`training/task-validation`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Atraining%2Ftask-validation).
+Open the pull request whose head branch is [`workshop/task-validation`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-validation).
 
 Verify:
 
-- Base: `training/task-model`
-- Head: `training/task-validation`
+- Base: `workshop/task-model`
+- Head: `workshop/task-validation`
 - Changed file: `src/tasks.js`
 - Responsibility: Validate missing or whitespace-only task titles
 
@@ -49,12 +49,12 @@ Sample review question:
 
 ## Top PR: Tests
 
-Open the pull request whose head branch is [`training/task-tests`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Atraining%2Ftask-tests).
+Open the pull request whose head branch is [`workshop/task-tests`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-tests).
 
 Verify:
 
-- Base: `training/task-validation`
-- Head: `training/task-tests`
+- Base: `workshop/task-validation`
+- Head: `workshop/task-tests`
 - Changed file: `test/tasks.test.js`
 - Responsibility: Verify task creation and whitespace validation
 

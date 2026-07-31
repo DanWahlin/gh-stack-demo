@@ -12,6 +12,20 @@ By the end of the workshop, learners can:
 4. Update a lower layer and synchronize dependent layers.
 5. Explain the team's review, continuous integration, and merge order.
 
+## Create the learner repository
+
+Do not fork this repository. Create an isolated build-mode repository before the workshop:
+
+```sh
+git clone https://github.com/DanWahlin/gh-stacked-prs-demo.git
+gh-stacked-prs-demo/scripts/create-workshop-copy.sh \
+  YOUR-OWNER/my-stacked-prs-workshop \
+  --build \
+  --private
+```
+
+The script copies `main` but does not copy or create the training pull requests. Learners create those during the labs. See [Create a workshop repository](../workshop-copies.md) for ready mode and permission details.
+
 ## Workshop map
 
 | Lab | Topic | Time |
