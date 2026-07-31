@@ -1,7 +1,7 @@
-# GitHub Stacked PRs Demo
+# GitHub Stacked PRs
 
 <p align="center">
-  <img src="images/gh-stacked-prs-demo.png" alt="Three dependent pull requests shown as a stack" width="350" height="344">
+  <img src="images/gh-stacked-prs.png" alt="Three dependent pull requests shown as a stack" width="350" height="344">
 </p>
 
 A tiny Node.js task API built as three focused pull requests to demonstrate [GitHub's Stacked PRs feature](https://docs.github.com/pull-requests/how-tos/stacked-pull-requests) and the `gh stack` CLI extension.
@@ -51,13 +51,13 @@ Examples:
 
 ## Presentation
 
-Need to bring your team up to speed on GitHub Stacked PRs? [Download the latest PowerPoint deck](https://github.com/DanWahlin/gh-stacked-prs-demo/raw/refs/heads/main/github-stacked-prs.pptx) to use for a quick presentation. It includes the challenge stacked PRs address, high-level concept, CLI workflow, and a start-to-finish terminal example.
+Need to bring your team up to speed on GitHub Stacked PRs? [Download the latest PowerPoint deck](https://github.com/DanWahlin/gh-stacked-prs/raw/refs/heads/main/github-stacked-prs.pptx) to use for a quick presentation. It includes the challenge stacked PRs address, high-level concept, CLI workflow, and a start-to-finish terminal example.
 
 ## Planned stack
 
-1. [`workshop/task-model`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-model) adds the task model.
-2. [`workshop/task-validation`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-validation) adds title validation.
-3. [`workshop/task-tests`](https://github.com/DanWahlin/gh-stacked-prs-demo/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-tests) adds tests for both layers.
+1. [`workshop/task-model`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-model) adds the task model.
+2. [`workshop/task-validation`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-validation) adds title validation.
+3. [`workshop/task-tests`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Aworkshop%2Ftask-tests) adds tests for both layers.
 
 Each PR targets the branch below it, so reviewers see only that layer's changes.
 
@@ -122,7 +122,7 @@ The commands use Bash or Zsh syntax. Before starting:
 
 ```sh
 OWNER="$(gh api user --jq .login)"
-REPO="gh-stacked-prs-demo-copy" # Change this if the name already exists.
+REPO="gh-stacked-prs-copy" # Change this if the name already exists.
 
 # Install the extension only when it is not already available.
 if ! gh stack --version >/dev/null 2>&1; then
@@ -141,14 +141,14 @@ cd "$REPO"
 git init -b main
 
 cat > README.md <<'EOF'
-# GitHub Stacked PRs Demo
+# GitHub Stacked PRs
 
 A tiny Node.js project built as three focused stacked pull requests.
 EOF
 
 cat > package.json <<'EOF'
 {
-  "name": "gh-stacked-prs-demo",
+  "name": "gh-stacked-prs",
   "version": "1.0.0",
   "private": true,
   "description": "A tiny Node.js API for demonstrating GitHub Stacked PRs",
@@ -270,7 +270,7 @@ gh stack submit --auto --open
 
 `--auto` skips the interactive editor and derives PR titles from the commits. `--open` is important with `--auto` because automatically submitted PRs otherwise default to drafts. To edit each title, description, and draft state interactively, use `gh stack submit` without those flags.
 
-The open training stack in this repository is continuously checked by the [training-resource verification workflow](https://github.com/DanWahlin/gh-stacked-prs-demo/actions/workflows/verify-training-resource.yml).
+The open training stack in this repository is continuously checked by the [training-resource verification workflow](https://github.com/DanWahlin/gh-stacked-prs/actions/workflows/verify-training-resource.yml).
 
 ### Create the demo with an AI coding agent
 
@@ -279,7 +279,7 @@ If you want to quickly create your own sample repository, run the following prom
 ```text
 Create a working GitHub Stacked PRs sample based on this repository:
 
-https://github.com/DanWahlin/gh-stacked-prs-demo
+https://github.com/DanWahlin/gh-stacked-prs
 
 You are authorized to create one new public repository in my currently
 authenticated GitHub account and open three pull requests. Leave all pull
@@ -297,7 +297,7 @@ Create the new repository in a separate, empty directory.
 
 Use this repository name:
 
-gh-stacked-prs-demo-copy
+gh-stacked-prs-copy
 
 If that name already exists in my GitHub account, append a short timestamp
 to make it unique. Do not delete, overwrite, rename, or reuse an existing
