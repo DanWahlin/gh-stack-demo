@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SOURCE_REPO="${SOURCE_REPO:-DanWahlin/gh-stacked-prs-demo}"
+SOURCE_REPO="${SOURCE_REPO:-DanWahlin/gh-stacked-prs}"
 MODE=""
 VISIBILITY=""
 TARGET_REPO=""
