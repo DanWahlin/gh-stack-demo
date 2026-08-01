@@ -9,6 +9,10 @@ The commands use Bash or Zsh syntax. Before starting:
 - Choose a repository name that does not already exist in your GitHub account.
 - Run the sequence from the directory where you want the new repository folder created.
 
+<p align="center">
+  <img src="workshop/images/stack-anatomy.webp" alt="A three-layer stack with main at the bottom, followed by tasks/model, tasks/validation, and tasks/api, with implementation and tests kept together in each layer." width="800">
+</p>
+
 ## 1. Set the repository name and verify `gh stack`
 
 ```sh
@@ -105,6 +109,10 @@ git commit -m "feat: add tested task model"
 ```
 
 Checkpoint: `npm test` reports 1 passing test, and `git status --short` is clean after the commit.
+
+<p align="center">
+  <img src="workshop/images/layer-build-loop.webp" alt="A four-step loop: create a layer, implement and test it, inspect the focused diff, commit locally, and then repeat for the next layer." width="800">
+</p>
 
 ## 4. Add the middle layer: tested validation
 
@@ -277,16 +285,13 @@ Checkpoint: `npm test` reports 6 passing tests, and the branch diff contains onl
 
 Each layer keeps its implementation and tests together and must pass before the next layer is created.
 
-The local branch chain is now:
-
-```text
-main
-└── tasks/model
-    └── tasks/validation
-        └── tasks/api
-```
+The local branch chain now matches the stack shown at the start of this procedure.
 
 ## 6. Test, inspect, and submit
+
+<p align="center">
+  <img src="workshop/images/submit-and-verify.webp" alt="A row-aligned mapping shows PR 3 tasks/api targeting tasks/validation, PR 2 tasks/validation targeting tasks/model, and PR 1 tasks/model targeting main after gh stack submit --auto --open." width="800">
+</p>
 
 ```sh
 npm test
