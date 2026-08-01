@@ -1,6 +1,6 @@
 # `gh stack` cheat sheet
 
-This reference matches the CLI help verified with `gh stack` 0.1.0.
+This reference is checked against the installed `gh stack` release by `scripts/check-cli-contract.py`.
 
 ## Create and inspect
 
@@ -23,9 +23,9 @@ This reference matches the CLI help verified with `gh stack` 0.1.0.
 | Submit drafts non-interactively | `gh stack submit --auto` | Generates titles and creates new pull requests as drafts |
 | Mark the submitted stack ready | `gh stack submit --auto --open` | Marks new and existing pull requests ready for review |
 | Push existing branches | `gh stack push` | Uses per-branch force-with-lease checks |
-| Synchronize everything | `gh stack sync` | Fetches, cascade-rebases, pushes, and syncs pull request state; verify every branch afterward |
+| Synchronize everything | `gh stack sync` | Reconciles remote stack state, fast-forwards trunk when possible, rebases if trunk moved, atomically pushes active branches, and syncs existing PR and stack state |
 | Prune merged local branches | `gh stack sync --prune` | Removes local branches for merged PRs |
-| Rebase locally | `gh stack rebase` | Cascade-rebases the stack |
+| Fetch and rebase locally | `gh stack rebase` | Fetches the remote, then cascade-rebases the stack without pushing or syncing PR state |
 | Abort a conflicted rebase | `gh stack rebase --abort` | Restores branches to their original state |
 | Continue after resolution | `gh stack rebase --continue` | Continues the active stack rebase |
 
@@ -44,6 +44,7 @@ GitHub evaluates branch protection and repository rules during the merge. The co
 - `submit` creates or updates remote pull request state. `--auto` creates new drafts; `--open` marks pull requests ready.
 - `rebase` and `sync` can change commit IDs.
 - `push` updates remote branch tips with force-with-lease protection.
+- `sync --prune` deletes local branches for merged pull requests; it does not delete the remote branches.
 - `merge` changes the trunk branch or enters the stack into a merge queue.
 - Agents need explicit approval before rebase, submission, push or sync, draft-state changes, and merge.
 - Never use a plain force push. The extension uses force-with-lease safeguards where history updates are required.

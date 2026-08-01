@@ -1,6 +1,6 @@
 # Build the canonical stack
 
-This tested procedure creates the same three-pull-request stack used by the live training example. It creates every required file, publishes `main`, builds and tests each layer, and submits the stack without a coding agent. It was validated with Node.js 24.18.0, Git 2.43.0, GitHub CLI 2.96.0, and `gh stack` 0.1.0.
+This procedure recreates the live three-pull-request training stack without a coding agent. It creates the required files, publishes `main`, tests each layer, and submits the stack. It was validated with Node.js 24.18.0, Git 2.43.0, GitHub CLI 2.96.0, and `gh stack` 0.1.0.
 
 The commands use Bash or Zsh syntax. Before starting:
 
@@ -24,6 +24,8 @@ fi
 Avoid adding `--force` to the installation command. A forced upgrade depends on GitHub being able to resolve the latest extension release and is unnecessary when `gh stack` is already installed.
 
 ## 2. Create and publish `main`
+
+The command below creates a private disposable repository. Change `--private` to `--public` only when you intend to publish the exercise.
 
 ```sh
 mkdir "$REPO"
@@ -57,7 +59,7 @@ git add README.md package.json
 git commit -m "chore: scaffold stacked PR demo"
 
 gh repo create "$OWNER/$REPO" \
-  --public \
+  --private \
   --source=. \
   --remote=origin \
   --push
@@ -101,6 +103,8 @@ npm test
 git add src/tasks.js test/tasks.model.test.js
 git commit -m "feat: add tested task model"
 ```
+
+Checkpoint: `npm test` reports 1 passing test, and `git status --short` is clean after the commit.
 
 ## 4. Add the middle layer: tested validation
 
@@ -149,6 +153,8 @@ npm test
 git add src/tasks.js test/tasks.validation.test.js
 git commit -m "feat: add tested task validation"
 ```
+
+Checkpoint: `npm test` reports 4 passing tests, and the branch diff contains only model validation and its tests.
 
 ## 5. Add the top layer: tested task API
 
@@ -267,6 +273,8 @@ git add package.json src/server.js test/tasks.api.test.js
 git commit -m "feat: add tested task API"
 ```
 
+Checkpoint: `npm test` reports 6 passing tests, and the branch diff contains only the API layer and its tests.
+
 Each layer keeps its implementation and tests together and must pass before the next layer is created.
 
 The local branch chain is now:
@@ -315,7 +323,7 @@ gh stack push
 # Fetch, rebase, push, and synchronize PR/stack state.
 gh stack sync
 
-# Rebase locally without performing the rest of a sync.
+# Fetch and cascade-rebase locally without pushing or syncing PR state.
 gh stack rebase
 
 # Interactively land all or part of the stack.

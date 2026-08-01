@@ -25,7 +25,7 @@ Run the shell commands from Bash or Zsh on macOS or Linux. On Windows, use Windo
 | GitHub CLI 2.90 or newer | `gh --version` and `gh auth status` |
 | `github/gh-stack` | `gh stack --version` |
 | GitHub Copilot CLI, desktop app, or another coding agent | Confirm that the agent can read the repository and run terminal commands |
-| GitHub's `gh-stack` agent skill for the Copilot CLI path | `copilot skill list` shows `gh-stack` |
+| GitHub's `gh-stack` agent skill for the Copilot CLI path | Installed and verified in Lab 0 |
 
 ## Prework: create the learner repository
 
@@ -48,9 +48,9 @@ The copy includes `AGENTS.md` but not the canonical training branches or pull re
 | --- | --- | --- |
 | 0 | Verify the agent and instructions | 5 minutes |
 | 1 | Plan and approve the stack | 10 minutes |
-| 2 | Build three tested layers | 25 minutes |
+| 2 | Build three tested layers | 20 minutes |
 | 3 | Verify, submit, and inspect | 10 minutes |
-| 4 | Respond to lower-layer feedback | 5 minutes |
+| 4 | Respond to lower-layer feedback | 10 minutes |
 | 5 | Team adoption discussion | 5 minutes |
 
 Use a disposable learner repository. Do not run these labs in the public training repository.
@@ -64,8 +64,6 @@ git status --short --branch
 gh auth status
 gh stack --version
 ```
-
-Then choose an agent experience.
 
 ### GitHub Copilot CLI
 
@@ -82,9 +80,9 @@ Start Copilot CLI from the learner repository root:
 copilot
 ```
 
-Run `/instructions` and verify that `AGENTS.md` is loaded.
+Run `/instructions`, Copilot CLI's view for custom instruction files, and verify that `AGENTS.md` is loaded.
 
-The skill supplies detailed `gh stack` command knowledge. `AGENTS.md` supplies this workshop's stack shape, test boundaries, approval gates, and evidence requirements. Verify both rather than assuming that semantic skill activation or repository instructions worked.
+The skill covers `gh stack` commands. `AGENTS.md` defines the workshop's stack, test boundaries, approval gates, and required evidence. Check that the agent loaded both.
 
 ### GitHub Copilot desktop app
 
@@ -210,10 +208,10 @@ Inspect the live pull requests. Verify that all three are open, ready for review
 
 ## Lab 4: Respond to lower-layer feedback
 
-Practice one small change to `tasks/model`:
+Practice a specific lower-layer change: add `priority: 'normal'` to every task and assert that default in `test/tasks.model.test.js`.
 
 1. Run `gh stack bottom`.
-2. Update the model and its test.
+2. Update the model and its test with the new `priority` default.
 3. Run the model tests and commit the correction.
 4. Inspect `gh stack view --json`.
 5. Get approval before `gh stack rebase`.

@@ -5,6 +5,7 @@ Inspect the stack before changing it:
 ```sh
 git status --short --branch
 gh stack view --json
+gh pr view <number> --json baseRefName,headRefName,files,isDraft,state
 ```
 
 Commit or stash work before rebasing or synchronizing.
@@ -20,7 +21,7 @@ Commit or stash work before rebasing or synchronizing.
 | Rebase reports conflicts | Two layers changed overlapping lines | Inspect conflict markers and layer responsibilities | Resolve, test, and run `gh stack rebase --continue`; use `--abort` when uncertain |
 | CI passes only on the top PR | Lower layers depend on higher-layer files or tests | Check out each branch and run its tests | Move required tests or code into the correct lower layer |
 | Push updates some branches but rejects another | A remote branch advanced | Read the rejected branch name from `gh stack push` | Fetch, inspect the remote change, reconcile it, and rerun the command |
-| Merge is rejected | A PR is draft, checks failed, or repository rules block it | Inspect PR checks and branch protection | Satisfy the GitHub requirement; stack merge does not bypass it |
+| Merge is rejected | A PR is closed or draft, required checks or reviews failed, the stack is non-linear, or repository rules block it | Inspect PR state, checks, reviews, and branch protection | Satisfy the GitHub requirement; stack merge does not bypass it |
 | The default trunk is wrong | Repository default branch detection differs from the intended trunk | Inspect the remote default branch | Initialize with `gh stack init --base <branch> ...` |
 
 ## Recovery rules

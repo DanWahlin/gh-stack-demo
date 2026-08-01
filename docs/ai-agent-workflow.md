@@ -1,6 +1,6 @@
 # Agentic coding workflow for stacked PRs
 
-Use `AGENTS.md` for durable repository rules and a task prompt for the current feature. GitHub's official `gh-stack` skill adds detailed command knowledge, but the workflow must still work from the repository instructions without relying on skill activation alone.
+Keep repository-wide rules in `AGENTS.md` and task details in the prompt. GitHub's official `gh-stack` skill adds command guidance, while the repository instructions still define how work must be planned, tested, approved, and verified.
 
 ## Supported agent experiences
 
@@ -19,7 +19,7 @@ Start Copilot CLI from the repository root:
 copilot
 ```
 
-Run `/instructions` and verify that `AGENTS.md` is loaded. Confirm that `copilot skill list` includes `gh-stack`. Use plan mode or restricted permissions for planning-only work. Do not grant broad automatic permissions merely to avoid approval prompts.
+Run `/instructions`, Copilot CLI's view for custom instruction files, and verify that `AGENTS.md` is loaded. Confirm that `copilot skill list` includes `gh-stack`. Use plan mode or restricted permissions for planning-only work. Do not grant broad automatic permissions merely to avoid approval prompts.
 
 The two sources have different jobs: the skill covers reusable `gh stack` behavior, while `AGENTS.md` defines this repository's planning, testing, approval, and verification contract. Keep the repository rules even when the skill is installed.
 
@@ -27,7 +27,7 @@ The two sources have different jobs: the skill covers reusable `gh stack` behavi
 
 Open the repository in the [GitHub Copilot desktop app](https://github.com/features/ai/github-app). For the guided workshop, start a session in the **local repository** and reference `@AGENTS.md` in the first prompt.
 
-The desktop app is available on macOS, Windows, and Linux. It can run sessions in isolated working trees, local repositories, or cloud sandboxes. It provides branch and file workspaces, diffs, an in-app browser, terminal validation, and GitHub pull request context. Repository and Copilot CLI skills and MCP servers are available in the app, but this workflow does not require additional customization.
+The desktop app can isolate sessions in working trees or cloud sandboxes. This workshop uses a local-repository session so its diffs, terminal output, and pull request context refer to the same checkout. No extra customization is required.
 
 ### Other coding agents
 

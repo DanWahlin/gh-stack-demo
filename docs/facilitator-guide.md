@@ -20,9 +20,9 @@ Treat learner-repository creation as prework. Add 5–10 minutes if learners mus
 | --- | --- |
 | 0–5 minutes | Verify the tools and agent instructions |
 | 5–15 minutes | Ask the agent to propose the stack and review its plan |
-| 15–40 minutes | Build and test three layers |
-| 40–50 minutes | Verify, submit, and inspect the live pull requests |
-| 50–55 minutes | Demonstrate lower-layer feedback |
+| 15–35 minutes | Build and test three layers |
+| 35–45 minutes | Verify, submit, and inspect the live pull requests |
+| 45–55 minutes | Demonstrate lower-layer feedback |
 | 55–60 minutes | Discuss team adoption |
 
 Run the exercises from the [agentic workshop](workshop/README.md).
@@ -60,7 +60,7 @@ gh skill install github/gh-stack gh-stack --agent github-copilot --scope user
 copilot skill list
 ```
 
-Then start Copilot CLI. Ask learners to run `/instructions` and confirm that `AGENTS.md` is loaded. The skill provides reusable CLI expertise; `AGENTS.md` remains the authority for workshop boundaries and approvals.
+Then start Copilot CLI. Ask learners to run `/instructions`, the view for custom instruction files, and confirm that `AGENTS.md` is loaded. The skill provides reusable CLI expertise; `AGENTS.md` remains the authority for workshop boundaries and approvals.
 
 ### GitHub Copilot desktop app
 

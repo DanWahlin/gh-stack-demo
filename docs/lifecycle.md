@@ -43,7 +43,7 @@ Use `gh stack rebase --abort` if conflict resolution is uncertain.
 
 ## 7. Synchronize
 
-Use `gh stack sync` only after approval when the stack must reconcile remote changes, update trunk, cascade-rebase branches, push them, and synchronize pull request state. Stop if local and remote stack definitions have diverged and no source of truth has been agreed.
+Use `gh stack sync` only after approval to reconcile remote stack changes, fast-forward trunk when possible, cascade-rebase branches if trunk moved, atomically push active branches, and synchronize existing pull request and stack state. Stop if local and remote stack definitions have diverged and no source of truth has been agreed.
 
 ## 8. Merge
 
@@ -51,7 +51,7 @@ Use an explicit merge method for non-interactive operation, such as `gh stack me
 
 ## 9. Clean up
 
-After merge, confirm trunk CI passes. Follow the team's branch-retention policy. `gh stack sync --prune` can remove local branches for merged pull requests.
+After merge, confirm trunk CI passes. Follow the team's branch-retention policy. With approval to delete the merged local branches, `gh stack sync --prune` can remove them without deleting their remote branches.
 
 ## Verify after every structural change
 

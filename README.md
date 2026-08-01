@@ -4,13 +4,13 @@
   <img src="images/gh-stacked-prs.png" alt="Three dependent pull requests shown as a stack" width="350" height="344">
 </p>
 
-A practical learning resource for [GitHub Stacked PRs](https://docs.github.com/pull-requests/how-tos/stacked-pull-requests) and the `gh stack` CLI extension. The repository includes a live three-PR stack, a manual walkthrough, an agentic workshop, facilitator material, and team adoption guidance.
+Learn [GitHub Stacked PRs](https://docs.github.com/pull-requests/how-tos/stacked-pull-requests) through a live three-PR stack, a manual walkthrough, and an agentic workshop.
 
 ## Choose a path
 
 - **5 minutes:** Learn [how stacked PRs work](#how-stacked-prs-work).
 - **15 minutes:** [Review the live stack](docs/review-walkthrough.md).
-- **30 minutes:** [Build the canonical stack manually](docs/build-the-stack.md).
+- **45–60 minutes:** [Build the canonical stack manually](docs/build-the-stack.md).
 - **60 minutes:** Create a learner repository as prework, then run the [agentic workshop](docs/workshop/README.md).
 - **Team adoption:** Use the [team playbook](docs/team-playbook.md) and [lifecycle guide](docs/lifecycle.md).
 - **Facilitation:** Use the [PowerPoint deck](https://github.com/DanWahlin/learn-github-stacked-prs/raw/refs/heads/main/github-stacked-prs.pptx) and [facilitator guide](docs/facilitator-guide.md).
@@ -67,16 +67,24 @@ The open pull requests in this repository provide a stable example for workshops
 
 Each pull request contains implementation and tests for its own behavior. The [training-resource workflow](https://github.com/DanWahlin/learn-github-stacked-prs/actions/workflows/verify-training-resource.yml) checks the documented pull request boundaries and runs the tests on every canonical branch.
 
-## Requirements
+## Hands-on requirements
 
-- Git 2.20 or newer.
+- Bash or Zsh on macOS or Linux. On Windows, use WSL or Git Bash.
+- Git 2.20 or newer, with `user.name` and `user.email` configured.
 - Node.js 20 or newer.
-- GitHub CLI 2.90 or newer.
-- [`github/gh-stack`](https://github.com/github/gh-stack).
+- GitHub CLI 2.90 or newer, authenticated to GitHub.
+- Permission to create or push to a GitHub repository.
+- The [`github/gh-stack`](https://github.com/github/gh-stack) extension.
 
-Verify the extension:
+Verify the setup:
 
 ```sh
+git --version
+git config user.name
+git config user.email
+node --version
+gh --version
+gh auth status
 gh stack --version
 ```
 
@@ -104,7 +112,7 @@ gh skill install github/gh-stack gh-stack --agent github-copilot --scope user
 copilot skill list
 ```
 
-The skill teaches Copilot the complete non-interactive `gh stack` workflow. The repository's [`AGENTS.md`](AGENTS.md) remains the required source of project-specific boundaries, approvals, and verification rules, so the workshop does not depend on skill activation alone. See GitHub's [Stack AI-generated code in pull requests](https://docs.github.com/copilot/tutorials/stack-ai-generated-code-in-pull-requests) tutorial for the official skill-based workflow.
+The skill gives Copilot reusable `gh stack` command and recovery guidance. The repository's [`AGENTS.md`](AGENTS.md) defines the project-specific boundaries, approvals, and verification rules. See GitHub's [Stack AI-generated code in pull requests](https://docs.github.com/copilot/tutorials/stack-ai-generated-code-in-pull-requests) tutorial for the official skill-based workflow.
 
 Start with a planning-only prompt:
 

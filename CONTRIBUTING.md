@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions that improve the stacked pull request training experience are welcome.
+Contributions should make this stacked pull request training clearer or easier to run.
 
 ## Before making changes
 
@@ -15,6 +15,7 @@ Run:
 
 ```sh
 python scripts/check-docs.py
+python scripts/check-presentation.py
 python scripts/check-cli-contract.py
 python scripts/verify-demo.py
 bash -n scripts/create-workshop-copy.sh

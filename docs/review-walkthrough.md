@@ -2,6 +2,8 @@
 
 Use the open learning stack in [this repository](https://github.com/DanWahlin/learn-github-stacked-prs/pulls) for this walkthrough.
 
+Treat the public stack as read-only. Inspect it, but do not push, synchronize, close, or merge its branches and pull requests.
+
 ## Stack graph
 
 ```text
@@ -11,7 +13,7 @@ main
         └── tasks/api
 ```
 
-Each branch ends green. Tests are delivered with the behavior they verify rather than deferred to a separate top layer.
+Every branch passes its tests. Each layer includes the tests for the behavior it introduces instead of deferring them to the top layer.
 
 ## Bottom PR: Tested task model
 
@@ -67,7 +69,7 @@ Sample review question:
 
 Keep each layer's behavior and tests in the same branch. The branch must pass its applicable tests before the next layer is created.
 
-A tests-only bottom pull request would intentionally fail until implementation arrived above it. That works poorly with required checks and independently reviewable pull requests. The head of every branch in this example is green.
+A tests-only bottom pull request stays red until the implementation arrives in a higher layer. That conflicts with required checks and makes the lower pull request impossible to review on its own.
 
 ## Review sequence
 
@@ -75,7 +77,7 @@ A tests-only bottom pull request would intentionally fail until implementation a
 2. Review validation against the approved model.
 3. Review the API against the approved domain behavior.
 4. Confirm that every branch passes its applicable tests.
-5. Merge only the approved portion of the stack.
+5. [Merge only the approved portion of the stack](lifecycle.md#8-merge).
 
 ## What a poor stack looks like
 

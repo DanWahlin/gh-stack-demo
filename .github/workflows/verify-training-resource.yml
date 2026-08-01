@@ -47,6 +47,9 @@ jobs:
       - name: Check documentation
         run: python scripts/check-docs.py
 
+      - name: Check presentation contract
+        run: python scripts/check-presentation.py
+
       - name: Check workshop copy script
         run: |
           bash -n scripts/create-workshop-copy.sh

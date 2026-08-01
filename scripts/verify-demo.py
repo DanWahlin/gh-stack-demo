@@ -12,16 +12,19 @@ EXPECTED = [
     {
         "base": "main",
         "head": "tasks/model",
+        "position": 1,
         "files": ["src/tasks.js", "test/tasks.model.test.js"],
     },
     {
         "base": "tasks/model",
         "head": "tasks/validation",
+        "position": 2,
         "files": ["src/tasks.js", "test/tasks.validation.test.js"],
     },
     {
         "base": "tasks/validation",
         "head": "tasks/api",
+        "position": 3,
         "files": ["package.json", "src/server.js", "test/tasks.api.test.js"],
     },
 ]
@@ -61,6 +64,7 @@ def main() -> int:
 
     print(f"CLI: {version}")
     print(f"Repository: https://github.com/{args.repo}")
+    observed_stack_ids: set[int] = set()
 
     for expected in EXPECTED:
         try:
@@ -104,9 +108,51 @@ def main() -> int:
                     f"PR #{pr['number']} {label}: expected {wanted!r}, observed {actual!r}"
                 )
 
+        try:
+            pull = json.loads(
+                run(
+                    "gh",
+                    "api",
+                    "-H",
+                    "X-GitHub-Api-Version: 2026-03-10",
+                    f"repos/{args.repo}/pulls/{pr['number']}",
+                )
+            )
+            stack = pull.get("stack")
+        except (RuntimeError, json.JSONDecodeError) as error:
+            failures.append(f"PR #{pr['number']} stack could not be inspected: {error}")
+            stack = None
+
+        stack_detail = ""
+        if stack is None:
+            failures.append(f"PR #{pr['number']} is not linked to a GitHub stack")
+        else:
+            observed_stack_ids.add(stack["id"])
+            stack_detail = (
+                f"; stack #{stack['number']} position "
+                f"{stack['position']}/{stack['size']}"
+            )
+            stack_checks = {
+                "stack position": (stack["position"], expected["position"]),
+                "stack size": (stack["size"], len(EXPECTED)),
+                "stack base": (stack["base"]["ref"], "main"),
+            }
+            for label, (actual, wanted) in stack_checks.items():
+                if actual != wanted:
+                    failures.append(
+                        f"PR #{pr['number']} {label}: expected {wanted!r}, "
+                        f"observed {actual!r}"
+                    )
+
         print(
             f"PR #{pr['number']}: {pr['baseRefName']} <- {pr['headRefName']} "
-            f"({', '.join(actual_files)})"
+            f"({', '.join(actual_files)}){stack_detail}"
+        )
+
+    if len(observed_stack_ids) != 1:
+        failures.append(
+            "expected all canonical pull requests to share one GitHub stack, "
+            f"observed stack IDs {sorted(observed_stack_ids)}"
         )
 
     if failures:

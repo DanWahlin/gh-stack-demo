@@ -78,7 +78,7 @@ Maintenance commands require extra care:
 - `gh stack sync` fetches, reconciles, rebases, pushes, and synchronizes pull request state. Get approval first. Stop on divergence or an unexpected prompt.
 - `gh stack merge --yes --squash` requests a non-interactive squash merge. Get explicit approval and verify the final GitHub state.
 
-Do not use plain `git push --force`. Do not replace `gh stack submit` with manual `gh pr create` commands for a tracked stack. See [`docs/cheat-sheet.md`](docs/cheat-sheet.md) for the full command reference.
+Do not use plain `git push --force`. Do not replace `gh stack submit` with manual `gh pr create` commands for a tracked stack. See [`docs/cheat-sheet.md`](docs/cheat-sheet.md) for the core workshop commands and GitHub's [Stacked PR CLI reference](https://docs.github.com/pull-requests/reference/stacked-prs-cli-commands) for every command, flag, and exit code.
 
 ## Approval boundaries
 
