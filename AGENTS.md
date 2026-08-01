@@ -1,6 +1,6 @@
 # Repository agent instructions
 
-Use these rules when planning, building, or maintaining stacked pull requests with the `gh stack` CLI extension. A specialized `gh-stack` skill is optional; this file is the required baseline.
+Use these rules when planning, building, or maintaining stacked pull requests with the `gh stack` CLI extension. GitHub's official `gh-stack` agent skill is recommended when the selected agent supports it; this file remains the required project-specific baseline.
 
 ## Decide whether to use a stack
 

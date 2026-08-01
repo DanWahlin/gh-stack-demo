@@ -69,8 +69,9 @@ Each pull request contains implementation and tests for its own behavior. The [t
 
 ## Requirements
 
+- Git 2.20 or newer.
 - Node.js 20 or newer.
-- GitHub CLI 2.0 or newer.
+- GitHub CLI 2.90 or newer.
 - [`github/gh-stack`](https://github.com/github/gh-stack).
 
 Verify the extension:
@@ -95,6 +96,15 @@ The workshop focuses on:
 - [GitHub Copilot desktop app](https://github.com/features/ai/github-app).
 
 Other agentic coding tools can be used when they load the repository guidance and can run Git, GitHub CLI, tests, and `gh stack`.
+
+For the GitHub Copilot CLI path, install GitHub's official `gh-stack` agent skill once at user scope before starting the workshop. User scope keeps the learner repository clean:
+
+```sh
+gh skill install github/gh-stack gh-stack --agent github-copilot --scope user
+copilot skill list
+```
+
+The skill teaches Copilot the complete non-interactive `gh stack` workflow. The repository's [`AGENTS.md`](AGENTS.md) remains the required source of project-specific boundaries, approvals, and verification rules, so the workshop does not depend on skill activation alone. See GitHub's [Stack AI-generated code in pull requests](https://docs.github.com/copilot/tutorials/stack-ai-generated-code-in-pull-requests) tutorial for the official skill-based workflow.
 
 Start with a planning-only prompt:
 

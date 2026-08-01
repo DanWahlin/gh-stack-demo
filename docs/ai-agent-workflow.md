@@ -1,10 +1,17 @@
 # Agentic coding workflow for stacked PRs
 
-Use `AGENTS.md` for durable repository rules and a task prompt for the current feature. A specialized `gh-stack` skill is optional; the workflow must work without one.
+Use `AGENTS.md` for durable repository rules and a task prompt for the current feature. GitHub's official `gh-stack` skill adds detailed command knowledge, but the workflow must still work from the repository instructions without relying on skill activation alone.
 
 ## Supported agent experiences
 
 ### GitHub Copilot CLI
+
+Install the official skill once at user scope. This avoids adding skill files to the repository's working tree:
+
+```sh
+gh skill install github/gh-stack gh-stack --agent github-copilot --scope user
+copilot skill list
+```
 
 Start Copilot CLI from the repository root:
 
@@ -12,7 +19,9 @@ Start Copilot CLI from the repository root:
 copilot
 ```
 
-Run `/instructions` and verify that `AGENTS.md` is loaded. Use plan mode or restricted permissions for planning-only work. Do not grant broad automatic permissions merely to avoid approval prompts.
+Run `/instructions` and verify that `AGENTS.md` is loaded. Confirm that `copilot skill list` includes `gh-stack`. Use plan mode or restricted permissions for planning-only work. Do not grant broad automatic permissions merely to avoid approval prompts.
+
+The two sources have different jobs: the skill covers reusable `gh stack` behavior, while `AGENTS.md` defines this repository's planning, testing, approval, and verification contract. Keep the repository rules even when the skill is installed.
 
 ### GitHub Copilot desktop app
 

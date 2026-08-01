@@ -45,10 +45,11 @@ The recreated PRs receive new numbers. Reviews, comments, checks, and PR history
 
 ## Required tools and permissions
 
-- Git
+- Git 2.20 or newer
 - Node.js 20 or newer
-- Authenticated GitHub CLI
+- Authenticated GitHub CLI 2.90 or newer
 - `github/gh-stack`
+- GitHub's `gh-stack` agent skill for the GitHub Copilot CLI workshop path
 - Configured `git user.name` and `git user.email`
 - Permission to create a repository under the selected owner
 
@@ -63,6 +64,8 @@ gh stack --version
 git config user.name
 git config user.email
 ```
+
+For the GitHub Copilot CLI path, also run `copilot skill list` and confirm that `gh-stack` appears.
 
 ## Safety behavior
 

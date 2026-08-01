@@ -20,11 +20,12 @@ Run the shell commands from Bash or Zsh on macOS or Linux. On Windows, use Windo
 
 | Tool | Validation |
 | --- | --- |
-| Git | `git --version` |
+| Git 2.20 or newer | `git --version` |
 | Node.js 20 or newer | `node --version` |
-| GitHub CLI | `gh --version` and `gh auth status` |
+| GitHub CLI 2.90 or newer | `gh --version` and `gh auth status` |
 | `github/gh-stack` | `gh stack --version` |
 | GitHub Copilot CLI, desktop app, or another coding agent | Confirm that the agent can read the repository and run terminal commands |
+| GitHub's `gh-stack` agent skill for the Copilot CLI path | `copilot skill list` shows `gh-stack` |
 
 ## Prework: create the learner repository
 
@@ -68,6 +69,13 @@ Then choose an agent experience.
 
 ### GitHub Copilot CLI
 
+Install GitHub's official skill once at user scope. This keeps the learner repository clean when the workshop checks `git status`:
+
+```sh
+gh skill install github/gh-stack gh-stack --agent github-copilot --scope user
+copilot skill list
+```
+
 Start Copilot CLI from the learner repository root:
 
 ```sh
@@ -75,6 +83,8 @@ copilot
 ```
 
 Run `/instructions` and verify that `AGENTS.md` is loaded.
+
+The skill supplies detailed `gh stack` command knowledge. `AGENTS.md` supplies this workshop's stack shape, test boundaries, approval gates, and evidence requirements. Verify both rather than assuming that semantic skill activation or repository instructions worked.
 
 ### GitHub Copilot desktop app
 
@@ -84,7 +94,7 @@ The app also supports isolated working-tree and cloud-sandbox sessions. Those mo
 
 ### Other coding agents
 
-Verify that the agent loads `AGENTS.md`, can run Git and `gh stack`, and can stop before remote operations.
+The `gh skill install` command supports multiple agent hosts through `--agent`. Installing the skill is recommended when the selected agent supports skills, but it is not required for the baseline lab. Verify that the agent loads `AGENTS.md`, can run Git and `gh stack`, and can stop before remote operations.
 
 ### Instruction check
 

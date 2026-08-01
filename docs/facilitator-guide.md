@@ -53,7 +53,14 @@ Do not use forks. Forks do not copy pull requests or the GitHub stack relationsh
 
 ### GitHub Copilot CLI
 
-Start from the learner repository root. Ask learners to run `/instructions` and confirm that `AGENTS.md` is loaded.
+Install GitHub's official `gh-stack` skill once at user scope so it does not make the learner repository dirty:
+
+```sh
+gh skill install github/gh-stack gh-stack --agent github-copilot --scope user
+copilot skill list
+```
+
+Then start Copilot CLI. Ask learners to run `/instructions` and confirm that `AGENTS.md` is loaded. The skill provides reusable CLI expertise; `AGENTS.md` remains the authority for workshop boundaries and approvals.
 
 ### GitHub Copilot desktop app
 
@@ -69,11 +76,14 @@ Run:
 
 ```sh
 gh auth status
+gh --version
 gh stack --version
 gh pr list --repo DanWahlin/learn-github-stacked-prs --state open --head tasks/model --json number,baseRefName,headRefName,files
 gh pr list --repo DanWahlin/learn-github-stacked-prs --state open --head tasks/validation --json number,baseRefName,headRefName,files
 gh pr list --repo DanWahlin/learn-github-stacked-prs --state open --head tasks/api --json number,baseRefName,headRefName,files
 ```
+
+For a GitHub Copilot CLI session, also run `copilot skill list` and confirm that `gh-stack` appears.
 
 Verify that the canonical pull requests are open, ready for review, and focused. Rehearse the workshop prompts in one build-mode repository. Agent wording can vary; evaluate the output against the rubric.
 
