@@ -51,7 +51,7 @@ Do not use forks. Forks do not copy pull requests or the GitHub stack relationsh
 
 ## Agent setup
 
-### GitHub Copilot CLI
+### [GitHub Copilot CLI](https://github.com/features/copilot/cli)
 
 Install GitHub's official `gh-stack` skill once at user scope so it does not make the learner repository dirty:
 
@@ -62,7 +62,7 @@ copilot skill list
 
 Then start Copilot CLI. Ask learners to run `/instructions`, the view for custom instruction files, and confirm that `AGENTS.md` is loaded. The skill provides reusable CLI expertise; `AGENTS.md` remains the authority for workshop boundaries and approvals.
 
-### GitHub Copilot desktop app
+### [GitHub Copilot desktop app](https://github.com/features/ai/github-app)
 
 Open the learner repository in the desktop app and start the workshop session in the **local repository**. Reference `@AGENTS.md` in the first prompt.
 

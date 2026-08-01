@@ -4,7 +4,7 @@ Keep repository-wide rules in `AGENTS.md` and task details in the prompt. GitHub
 
 ## Supported agent experiences
 
-### GitHub Copilot CLI
+### [GitHub Copilot CLI](https://github.com/features/copilot/cli)
 
 Install the official skill once at user scope. This avoids adding skill files to the repository's working tree:
 
@@ -23,9 +23,9 @@ Run `/instructions`, Copilot CLI's view for custom instruction files, and verify
 
 The two sources have different jobs: the skill covers reusable `gh stack` behavior, while `AGENTS.md` defines this repository's planning, testing, approval, and verification contract. Keep the repository rules even when the skill is installed.
 
-### GitHub Copilot desktop app
+### [GitHub Copilot desktop app](https://github.com/features/ai/github-app)
 
-Open the repository in the [GitHub Copilot desktop app](https://github.com/features/ai/github-app). For the guided workshop, start a session in the **local repository** and reference `@AGENTS.md` in the first prompt.
+Open the repository in the desktop app. For the guided workshop, start a session in the **local repository** and reference `@AGENTS.md` in the first prompt.
 
 The desktop app can isolate sessions in working trees or cloud sandboxes. This workshop uses a local-repository session so its diffs, terminal output, and pull request context refer to the same checkout. No extra customization is required.
 

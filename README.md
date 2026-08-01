@@ -13,7 +13,7 @@ Learn [GitHub Stacked PRs](https://docs.github.com/pull-requests/how-tos/stacked
 - **45–60 minutes:** [Build the canonical stack manually](docs/build-the-stack.md).
 - **60 minutes:** Create a learner repository as prework, then run the [agentic workshop](docs/workshop/README.md).
 - **Team adoption:** Use the [team playbook](docs/team-playbook.md) and [lifecycle guide](docs/lifecycle.md).
-- **Facilitation:** Use the [PowerPoint deck](https://github.com/DanWahlin/learn-github-stacked-prs/raw/refs/heads/main/github-stacked-prs.pptx) and [facilitator guide](docs/facilitator-guide.md).
+- **Training:** Use the [PowerPoint deck](https://github.com/DanWahlin/learn-github-stacked-prs/raw/refs/heads/main/github-stacked-prs.pptx) and [facilitator guide](docs/facilitator-guide.md).
 
 Keep the [`gh stack` cheat sheet](docs/cheat-sheet.md), [troubleshooting guide](docs/troubleshooting.md), and [glossary](docs/glossary.md) nearby after training.
 
@@ -100,7 +100,7 @@ The root [`AGENTS.md`](AGENTS.md) gives coding agents the stack-selection rules,
 
 The workshop focuses on:
 
-- [GitHub Copilot CLI](https://docs.github.com/copilot/how-tos/copilot-cli).
+- [GitHub Copilot CLI](https://github.com/features/copilot/cli).
 - [GitHub Copilot desktop app](https://github.com/features/ai/github-app).
 
 Other agentic coding tools can be used when they load the repository guidance and can run Git, GitHub CLI, tests, and `gh stack`.

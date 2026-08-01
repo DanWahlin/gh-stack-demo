@@ -2,7 +2,7 @@
 
 Build the same three-layer stack shown in the canonical pull requests, using an AI coding agent while keeping a human in control of branch boundaries, tests, publication, and merge decisions.
 
-The 60-minute workshop uses GitHub Copilot CLI or the [GitHub Copilot desktop app](https://github.com/features/ai/github-app). Other agentic coding tools can be used if they load `AGENTS.md` and can run the required terminal commands.
+The 60-minute workshop uses [GitHub Copilot CLI](https://github.com/features/copilot/cli) or the [GitHub Copilot desktop app](https://github.com/features/ai/github-app). Other agentic coding tools can be used if they load `AGENTS.md` and can run the required terminal commands.
 
 ## Learning objectives
 
