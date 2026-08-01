@@ -113,12 +113,9 @@ Compare the response with `AGENTS.md`. Stop if the agent misses an approval boun
 
 Build the same dependency chain as the canonical training stack:
 
-```text
-main
-└── tasks/model
-    └── tasks/validation
-        └── tasks/api
-```
+<p align="center">
+  <img src="images/stack-anatomy.webp" alt="A three-layer stack with main at the bottom, followed by tasks/model, tasks/validation, and tasks/api, with implementation and tests kept together in each layer." width="800">
+</p>
 
 Enter this planning prompt:
 
@@ -145,6 +142,10 @@ Approve the proposal only when:
 - The agent stops before pushing, submitting, synchronizing, or merging.
 
 ## Lab 2: Build three tested layers
+
+<p align="center">
+  <img src="images/layer-build-loop.webp" alt="A four-step loop: create a layer, implement and test it, inspect the focused diff, commit locally, and then repeat for the next layer." width="800">
+</p>
 
 Use the same implementation prompt once for each row, from top to bottom in this table:
 
@@ -209,6 +210,10 @@ Inspect the live pull requests. Verify that all three are open, ready for review
 ## Lab 4: Respond to lower-layer feedback
 
 Practice a specific lower-layer change: add `priority: 'normal'` to every task and assert that default in `test/tasks.model.test.js`.
+
+<p align="center">
+  <img src="images/feedback-cascade.webp" alt="A five-step flow for lower-layer feedback: update the model, cascade rebase, test the full stack, approve synchronization, and verify every live pull request." width="800">
+</p>
 
 1. Run `gh stack bottom`.
 2. Update the model and its test with the new `priority` default.

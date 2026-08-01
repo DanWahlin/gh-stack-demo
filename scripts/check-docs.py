@@ -9,7 +9,8 @@ from pathlib import Path
 from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parents[1]
-LINK = re.compile(r"(?<!!)\[[^]]*]\(([^)]+)\)")
+MARKDOWN_TARGET = re.compile(r"!?\[[^]]*]\(([^)]+)\)")
+HTML_SOURCE = re.compile(r'<(?:img|source)\b[^>]*\bsrc="([^"]+)"')
 
 
 def markdown_files() -> list[Path]:
@@ -30,7 +31,8 @@ def main() -> int:
         if text.count("```") % 2:
             failures.append(f"{path.relative_to(ROOT)} has unbalanced code fences")
 
-        for target in LINK.findall(text):
+        targets = MARKDOWN_TARGET.findall(text) + HTML_SOURCE.findall(text)
+        for target in targets:
             target = target.strip().split(maxsplit=1)[0]
             if target.startswith(("http://", "https://", "mailto:", "#")):
                 continue
