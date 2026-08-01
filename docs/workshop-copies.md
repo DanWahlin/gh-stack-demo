@@ -9,8 +9,8 @@ This repository is a GitHub template and supports two isolated workshop modes.
 Use build mode for the full hands-on workshop:
 
 ```sh
-git clone https://github.com/DanWahlin/gh-stacked-prs.git
-gh-stacked-prs/scripts/create-workshop-copy.sh \
+git clone https://github.com/DanWahlin/learn-github-stacked-prs.git
+learn-github-stacked-prs/scripts/create-workshop-copy.sh \
   YOUR-OWNER/my-stacked-prs-workshop \
   --build \
   --private
@@ -25,8 +25,8 @@ Use a unique repository name. Change `--private` to `--public` only when the lea
 Use ready mode for facilitators, shortened sessions, or recovery when a learner falls behind:
 
 ```sh
-git clone https://github.com/DanWahlin/gh-stacked-prs.git
-gh-stacked-prs/scripts/create-workshop-copy.sh \
+git clone https://github.com/DanWahlin/learn-github-stacked-prs.git
+learn-github-stacked-prs/scripts/create-workshop-copy.sh \
   YOUR-OWNER/my-ready-stacked-prs-workshop \
   --ready \
   --private

@@ -13,7 +13,7 @@ The commands use Bash or Zsh syntax. Before starting:
 
 ```sh
 OWNER="$(gh api user --jq .login)"
-REPO="gh-stacked-prs-copy" # Change this if the name already exists.
+REPO="learn-github-stacked-prs-copy" # Change this if the name already exists.
 
 # Install the extension only when it is not already available.
 if ! gh stack --version >/dev/null 2>&1; then
@@ -295,7 +295,7 @@ After submission, inspect the live pull requests:
 
 `--auto` skips the interactive editor and derives pull request titles from the commits. `--open` marks new and existing pull requests ready for review. To edit titles, descriptions, and draft states interactively, use `gh stack submit` without those flags.
 
-The open training stack in this repository is continuously checked by the [training-resource verification workflow](https://github.com/DanWahlin/gh-stacked-prs/actions/workflows/verify-training-resource.yml).
+The open training stack in this repository is continuously checked by the [training-resource verification workflow](https://github.com/DanWahlin/learn-github-stacked-prs/actions/workflows/verify-training-resource.yml).
 
 
 

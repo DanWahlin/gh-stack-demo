@@ -70,9 +70,9 @@ Run:
 ```sh
 gh auth status
 gh stack --version
-gh pr list --repo DanWahlin/gh-stacked-prs --state open --head tasks/model --json number,baseRefName,headRefName,files
-gh pr list --repo DanWahlin/gh-stacked-prs --state open --head tasks/validation --json number,baseRefName,headRefName,files
-gh pr list --repo DanWahlin/gh-stacked-prs --state open --head tasks/api --json number,baseRefName,headRefName,files
+gh pr list --repo DanWahlin/learn-github-stacked-prs --state open --head tasks/model --json number,baseRefName,headRefName,files
+gh pr list --repo DanWahlin/learn-github-stacked-prs --state open --head tasks/validation --json number,baseRefName,headRefName,files
+gh pr list --repo DanWahlin/learn-github-stacked-prs --state open --head tasks/api --json number,baseRefName,headRefName,files
 ```
 
 Verify that the canonical pull requests are open, ready for review, and focused. Rehearse the workshop prompts in one build-mode repository. Agent wording can vary; evaluate the output against the rubric.

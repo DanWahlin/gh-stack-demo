@@ -1,6 +1,6 @@
 # Review the live stack
 
-Use the open learning stack in [this repository](https://github.com/DanWahlin/gh-stacked-prs/pulls) for this walkthrough.
+Use the open learning stack in [this repository](https://github.com/DanWahlin/learn-github-stacked-prs/pulls) for this walkthrough.
 
 ## Stack graph
 
@@ -15,7 +15,7 @@ Each branch ends green. Tests are delivered with the behavior they verify rather
 
 ## Bottom PR: Tested task model
 
-Open the pull request whose head branch is [`tasks/model`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Atasks%2Fmodel).
+Open the pull request whose head branch is [`tasks/model`](https://github.com/DanWahlin/learn-github-stacked-prs/pulls?q=is%3Apr+head%3Atasks%2Fmodel).
 
 Verify:
 
@@ -33,7 +33,7 @@ Sample review question:
 
 ## Middle PR: Tested validation
 
-Open the pull request whose head branch is [`tasks/validation`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Atasks%2Fvalidation).
+Open the pull request whose head branch is [`tasks/validation`](https://github.com/DanWahlin/learn-github-stacked-prs/pulls?q=is%3Apr+head%3Atasks%2Fvalidation).
 
 Verify:
 
@@ -49,7 +49,7 @@ Sample review question:
 
 ## Top PR: Tested task API
 
-Open the pull request whose head branch is [`tasks/api`](https://github.com/DanWahlin/gh-stacked-prs/pulls?q=is%3Apr+head%3Atasks%2Fapi).
+Open the pull request whose head branch is [`tasks/api`](https://github.com/DanWahlin/learn-github-stacked-prs/pulls?q=is%3Apr+head%3Atasks%2Fapi).
 
 Verify:
 

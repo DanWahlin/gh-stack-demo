@@ -31,9 +31,9 @@ Run the shell commands from Bash or Zsh on macOS or Linux. On Windows, use Windo
 Do not fork the training repository. Create an isolated private repository in build mode:
 
 ```sh
-git clone https://github.com/DanWahlin/gh-stacked-prs.git
+git clone https://github.com/DanWahlin/learn-github-stacked-prs.git
 
-gh-stacked-prs/scripts/create-workshop-copy.sh \
+learn-github-stacked-prs/scripts/create-workshop-copy.sh \
   YOUR-OWNER/my-stacked-prs-workshop \
   --build \
   --private

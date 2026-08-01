@@ -39,7 +39,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--repo",
-        default="DanWahlin/gh-stacked-prs",
+        default="DanWahlin/learn-github-stacked-prs",
         help="GitHub repository containing the canonical open stack",
     )
     args = parser.parse_args()

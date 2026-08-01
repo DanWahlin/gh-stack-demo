@@ -13,7 +13,7 @@ A practical learning resource for [GitHub Stacked PRs](https://docs.github.com/p
 - **30 minutes:** [Build the canonical stack manually](docs/build-the-stack.md).
 - **60 minutes:** Create a learner repository as prework, then run the [agentic workshop](docs/workshop/README.md).
 - **Team adoption:** Use the [team playbook](docs/team-playbook.md) and [lifecycle guide](docs/lifecycle.md).
-- **Facilitation:** Use the [PowerPoint deck](https://github.com/DanWahlin/gh-stacked-prs/raw/refs/heads/main/github-stacked-prs.pptx) and [facilitator guide](docs/facilitator-guide.md).
+- **Facilitation:** Use the [PowerPoint deck](https://github.com/DanWahlin/learn-github-stacked-prs/raw/refs/heads/main/github-stacked-prs.pptx) and [facilitator guide](docs/facilitator-guide.md).
 
 Keep the [`gh stack` cheat sheet](docs/cheat-sheet.md), [troubleshooting guide](docs/troubleshooting.md), and [glossary](docs/glossary.md) nearby after training.
 
@@ -61,11 +61,11 @@ The open pull requests in this repository provide a stable example for workshops
 
 | Layer | Pull request | Base | Head | Changed files | Tests on branch |
 | --- | --- | --- | --- | --- | --- |
-| Model | [PR #21](https://github.com/DanWahlin/gh-stacked-prs/pull/21) | `main` | `tasks/model` | `src/tasks.js`, `test/tasks.model.test.js` | 1 |
-| Validation | [PR #22](https://github.com/DanWahlin/gh-stacked-prs/pull/22) | `tasks/model` | `tasks/validation` | `src/tasks.js`, `test/tasks.validation.test.js` | 4 |
-| API | [PR #23](https://github.com/DanWahlin/gh-stacked-prs/pull/23) | `tasks/validation` | `tasks/api` | `package.json`, `src/server.js`, `test/tasks.api.test.js` | 6 |
+| Model | [PR #21](https://github.com/DanWahlin/learn-github-stacked-prs/pull/21) | `main` | `tasks/model` | `src/tasks.js`, `test/tasks.model.test.js` | 1 |
+| Validation | [PR #22](https://github.com/DanWahlin/learn-github-stacked-prs/pull/22) | `tasks/model` | `tasks/validation` | `src/tasks.js`, `test/tasks.validation.test.js` | 4 |
+| API | [PR #23](https://github.com/DanWahlin/learn-github-stacked-prs/pull/23) | `tasks/validation` | `tasks/api` | `package.json`, `src/server.js`, `test/tasks.api.test.js` | 6 |
 
-Each pull request contains implementation and tests for its own behavior. The [training-resource workflow](https://github.com/DanWahlin/gh-stacked-prs/actions/workflows/verify-training-resource.yml) checks the documented pull request boundaries and runs the tests on every canonical branch.
+Each pull request contains implementation and tests for its own behavior. The [training-resource workflow](https://github.com/DanWahlin/learn-github-stacked-prs/actions/workflows/verify-training-resource.yml) checks the documented pull request boundaries and runs the tests on every canonical branch.
 
 ## Requirements
 
@@ -115,9 +115,9 @@ Do not fork this repository. Forks do not copy pull requests, reviews, checks, o
 Use the repository-copy script instead:
 
 ```sh
-git clone https://github.com/DanWahlin/gh-stacked-prs.git
+git clone https://github.com/DanWahlin/learn-github-stacked-prs.git
 
-gh-stacked-prs/scripts/create-workshop-copy.sh \
+learn-github-stacked-prs/scripts/create-workshop-copy.sh \
   YOUR-OWNER/my-stacked-prs-workshop \
   --build \
   --private
