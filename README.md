@@ -4,14 +4,14 @@
   <img src="images/gh-stacked-prs.png" alt="Three dependent pull requests shown as a stack" width="350" height="344">
 </p>
 
-Learn [GitHub Stacked PRs](https://docs.github.com/pull-requests/how-tos/stacked-pull-requests) through a live three-PR stack, a manual walkthrough, and an agentic workshop.
+Learn GitHub Stacked PRs through a live three-PR stack, a GitHub CLI walkthrough, and an agentic workshop.
 
 ## Choose a path
 
 - **5 minutes:** Learn [how stacked PRs work](#how-stacked-prs-work).
 - **15 minutes:** [Review the live stack](docs/review-walkthrough.md).
 - **45–60 minutes:** [Build the canonical stack using the GitHub CLI (gh)](docs/build-the-stack.md).
-- **60 minutes:** Create a learner repository as prework, then run the [agentic workshop](docs/workshop/README.md).
+- **60 minutes:** Create a learner repository then run the [agentic workshop](docs/workshop/README.md).
 - **Team adoption:** Use the [team playbook](docs/team-playbook.md) and [lifecycle guide](docs/lifecycle.md).
 - **Training:** Use the [PowerPoint deck](https://github.com/DanWahlin/learn-github-stacked-prs/raw/refs/heads/main/github-stacked-prs.pptx) and [facilitator guide](docs/facilitator-guide.md).
 
