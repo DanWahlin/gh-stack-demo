@@ -96,10 +96,11 @@ Request the merge from the bottom through the approved layer with an explicit me
 
 Do not interleave unrelated features in one stack. Use separate worktrees and stacks:
 
-```text
-Worktree A: authentication stack
-Worktree B: billing stack
-Worktree C: notifications stack
+```mermaid
+flowchart LR
+    WorktreeA["Worktree A"] --> AuthStack["Authentication stack"]
+    WorktreeB["Worktree B"] --> BillingStack["Billing stack"]
+    WorktreeC["Worktree C"] --> NotificationsStack["Notifications stack"]
 ```
 
 ## Definition of ready

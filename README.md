@@ -21,11 +21,11 @@ Keep the [`gh stack` cheat sheet](docs/cheat-sheet.md), [troubleshooting guide](
 
 A stacked pull request is one reviewable layer in a linear dependency chain. Each branch starts from the branch below it, and each pull request targets that lower branch. Reviewers see the change introduced by one layer instead of every change accumulated above `main`.
 
-```text
-main
-└── tasks/model
-    └── tasks/validation
-        └── tasks/api
+```mermaid
+flowchart BT
+    Main["main"] --> Model["tasks/model"]
+    Model --> Validation["tasks/validation"]
+    Validation --> API["tasks/api"]
 ```
 
 | Ordinary pull request | Stacked pull requests |
@@ -39,13 +39,13 @@ Review normally starts at the bottom because higher layers depend on decisions m
 
 ### Decide whether to use a stack
 
-```text
-Does the work contain multiple reviewable changes?
-├── No → Use a normal branch and pull request
-└── Yes
-    └── Do the changes form one linear dependency chain?
-        ├── Yes → Use one stack
-        └── No → Use separate branches or separate stacks
+```mermaid
+flowchart TD
+    Multiple{"Multiple reviewable changes?"}
+    Multiple -- No --> Normal["Use a normal branch and pull request"]
+    Multiple -- Yes --> Linear{"One linear dependency chain?"}
+    Linear -- Yes --> Stack["Use one stack"]
+    Linear -- No --> Separate["Use separate branches or stacks"]
 ```
 
 Examples:

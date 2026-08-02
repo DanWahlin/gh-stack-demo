@@ -6,11 +6,11 @@ Treat the public stack as read-only. Inspect it, but do not push, synchronize, c
 
 ## Stack graph
 
-```text
-main
-└── tasks/model
-    └── tasks/validation
-        └── tasks/api
+```mermaid
+flowchart BT
+    Main["main"] --> Model["tasks/model"]
+    Model --> Validation["tasks/validation"]
+    Validation --> API["tasks/api"]
 ```
 
 Every branch passes its tests. Each layer includes the tests for the behavior it introduces instead of deferring them to the top layer.

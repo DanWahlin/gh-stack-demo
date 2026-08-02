@@ -100,10 +100,11 @@ When a lower layer changes:
 
 Use separate worktrees and stacks for unrelated features:
 
-```text
-worktrees/authentication  → authentication stack
-worktrees/billing         → billing stack
-worktrees/notifications   → notifications stack
+```mermaid
+flowchart LR
+    AuthWorktree["worktrees/authentication"] --> AuthStack["Authentication stack"]
+    BillingWorktree["worktrees/billing"] --> BillingStack["Billing stack"]
+    NotificationsWorktree["worktrees/notifications"] --> NotificationsStack["Notifications stack"]
 ```
 
 Do not ask one agent to interleave independent features in one stack merely because they belong to the same project.
