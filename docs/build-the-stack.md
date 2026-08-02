@@ -4,10 +4,10 @@ This procedure recreates the live three-pull-request training stack without a co
 
 The commands use Bash or Zsh syntax. Before starting:
 
-- Run `gh auth status` and confirm that GitHub CLI is authenticated.
-- Confirm that `git config user.name` and `git config user.email` return your Git identity.
-- Choose a repository name that does not already exist in your GitHub account.
-- Run the sequence from the directory where you want the new repository folder created.
+- Run `gh auth status` and confirm that GitHub CLI is authenticated
+- Confirm that `git config user.name` and `git config user.email` return your Git identity
+- Choose a repository name that does not already exist in your GitHub account
+- Run the sequence from the directory where you want the new repository folder created
 
 <p align="center">
   <img src="workshop/images/stack-anatomy.webp" alt="A three-layer stack with main at the bottom, followed by tasks/model, tasks/validation, and tasks/api, with implementation and tests kept together in each layer." width="800">
@@ -301,10 +301,10 @@ gh stack submit --auto --open
 
 After submission, inspect the live pull requests:
 
-1. The model pull request targets `main` from `tasks/model`.
-2. The validation pull request targets `tasks/model` from `tasks/validation`.
-3. The API pull request targets `tasks/validation` from `tasks/api`.
-4. All three pull requests are open, ready for review, focused, and linked as one stack.
+1. The model pull request targets `main` from `tasks/model`
+2. The validation pull request targets `tasks/model` from `tasks/validation`
+3. The API pull request targets `tasks/validation` from `tasks/api`
+4. All three pull requests are open, ready for review, focused, and linked as one stack
 
 `--auto` skips the interactive editor and derives pull request titles from the commits. `--open` marks new and existing pull requests ready for review. To edit titles, descriptions, and draft states interactively, use `gh stack submit` without those flags.
 

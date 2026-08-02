@@ -8,8 +8,8 @@ Use one stack when the work has multiple reviewable layers and each higher layer
 
 Use instead:
 
-- A normal branch and pull request for one isolated change.
-- Separate stacks, preferably in separate worktrees, for independent features.
+- A normal branch and pull request for one isolated change
+- Separate stacks, preferably in separate worktrees, for independent features
 
 Do not combine unrelated work merely because it belongs to one project.
 
@@ -27,12 +27,12 @@ Stop if the working tree contains unrelated changes, `gh stack` is missing, or t
 
 Inspect the repository and propose:
 
-1. The trunk branch.
-2. Branch names ordered from bottom to top.
-3. The responsibility and exclusions for each branch.
-4. Acceptance criteria and tests for each branch.
-5. Layer-specific and full-stack verification commands.
-6. Work that belongs in a separate stack or normal pull request.
+1. The trunk branch
+2. Branch names ordered from bottom to top
+3. The responsibility and exclusions for each branch
+4. Acceptance criteria and tests for each branch
+5. Layer-specific and full-stack verification commands
+6. Work that belongs in a separate stack or normal pull request
 
 Wait for approval before implementation.
 
@@ -40,12 +40,12 @@ Wait for approval before implementation.
 
 For each approved layer:
 
-1. Create or check out the layer.
-2. Implement only the behavior assigned to the layer and add its tests.
-3. Run the layer tests and applicable accumulated tests.
-4. Inspect the diff against the parent branch.
-5. Commit the implementation and tests together.
-6. Stop if the layer is not green.
+1. Create or check out the layer
+2. Implement only the behavior assigned to the layer and add its tests
+3. Run the layer tests and applicable accumulated tests
+4. Inspect the diff against the parent branch
+5. Commit the implementation and tests together
+6. Stop if the layer is not green
 
 Do not defer all meaningful tests to the top pull request.
 
@@ -84,11 +84,11 @@ Do not use plain `git push --force`. Do not replace `gh stack submit` with manua
 
 Do not perform these operations without explicit approval:
 
-- Rewrite stack history.
-- Push or synchronize branches.
-- Submit pull requests or change their draft state.
-- Merge pull requests.
-- Delete branches, repositories, or stack data.
+- Rewrite stack history
+- Push or synchronize branches
+- Submit pull requests or change their draft state
+- Merge pull requests
+- Delete branches, repositories, or stack data
 
 A request to plan or implement does not approve publication, history rewrites, or merge.
 
@@ -96,12 +96,12 @@ A request to plan or implement does not approve publication, history rewrites, o
 
 Before requesting approval to submit, return:
 
-- `gh stack view --json` output.
-- Branch ancestry verification.
-- A parent-to-child changed-file summary for every layer.
-- Layer-specific test results.
-- Full-stack test results from the top layer.
-- Any conflicts, deviations, or unverified assumptions.
+- `gh stack view --json` output
+- Branch ancestry verification
+- A parent-to-child changed-file summary for every layer
+- Layer-specific test results
+- Full-stack test results from the top layer
+- Any conflicts, deviations, or unverified assumptions
 
 After an approved submission, inspect the live GitHub pull requests. Verify that every pull request has the intended base, head, changed files, readiness state, and stack linkage. Do not claim remote success from command exit status alone.
 

@@ -2,17 +2,17 @@
 
 Build the same three-layer stack shown in the canonical pull requests, using an AI coding agent while keeping a human in control of branch boundaries, tests, publication, and merge decisions.
 
-The 60-minute workshop uses [GitHub Copilot CLI](https://github.com/features/copilot/cli) or the [GitHub Copilot desktop app](https://github.com/features/ai/github-app). Other agentic coding tools can be used if they load `AGENTS.md` and can run the required terminal commands.
+The 55-minute workshop uses [GitHub Copilot](https://github.com/features/copilot), [GitHub Copilot CLI](https://github.com/features/copilot/cli), or the [GitHub Copilot desktop app](https://github.com/features/ai/github-app). Other agentic coding tools can be used if they load `AGENTS.md` and can run the required terminal commands.
 
 ## Learning objectives
 
 By the end of the workshop, learners can:
 
-1. Decide whether work needs one stack, separate stacks, or a normal pull request.
-2. Evaluate an agent-proposed stack before implementation.
-3. Keep implementation and tests together in every layer.
-4. Submit and verify the stack on GitHub.
-5. Explain how lower-layer feedback affects dependent branches.
+1. Decide whether work needs one stack, separate stacks, or a normal pull request
+2. Evaluate an agent-proposed stack before implementation
+3. Keep implementation and tests together in every layer
+4. Submit and verify the stack on GitHub
+5. Explain how lower-layer feedback affects dependent branches
 
 ## Prerequisites
 
@@ -24,7 +24,7 @@ Run the shell commands from Bash or Zsh on macOS or Linux. On Windows, use Windo
 | Node.js 20 or newer | `node --version` |
 | GitHub CLI 2.90 or newer | `gh --version` and `gh auth status` |
 | `github/gh-stack` | `gh stack --version` |
-| GitHub Copilot CLI, desktop app, or another coding agent | Confirm that the agent can read the repository and run terminal commands |
+| GitHub Copilot, GitHub Copilot CLI, desktop app, or another coding agent | Confirm that the agent can read the repository and run terminal commands |
 | GitHub's `gh-stack` agent skill for the Copilot CLI path | Installed and verified in Lab 0 |
 
 ## Prework: create the learner repository
@@ -33,11 +33,7 @@ Do not fork the training repository. Create an isolated private repository in bu
 
 ```sh
 git clone https://github.com/DanWahlin/learn-github-stacked-prs.git
-
-learn-github-stacked-prs/scripts/create-workshop-copy.sh \
-  YOUR-OWNER/my-stacked-prs-workshop \
-  --build \
-  --private
+node learn-github-stacked-prs/scripts/create-workshop-copy.mjs YOUR-OWNER/my-stacked-prs-workshop --build --private
 ```
 
 The copy includes `AGENTS.md` but not the canonical training branches or pull requests. Run the workshop from the new repository directory. If repository creation is not completed as prework, allow 5–10 additional minutes.
@@ -51,7 +47,6 @@ The copy includes `AGENTS.md` but not the canonical training branches or pull re
 | 2 | Build three tested layers | 20 minutes |
 | 3 | Verify, submit, and inspect | 10 minutes |
 | 4 | Respond to lower-layer feedback | 10 minutes |
-| 5 | Team adoption discussion | 5 minutes |
 
 Use a disposable learner repository. Do not run these labs in the public training repository.
 
@@ -65,14 +60,20 @@ gh auth status
 gh stack --version
 ```
 
+### [GitHub Copilot](https://github.com/features/copilot)
+
+Open the learner repository in a supported IDE and use agent mode from the repository workspace. Verify that `AGENTS.md` is applied and that the agent can run the required terminal commands.
+
 ### GitHub Copilot CLI
 
-Install GitHub's official skill once at user scope. This keeps the learner repository clean when the workshop checks `git status`:
+Install GitHub's official skill:
 
 ```sh
-gh skill install github/gh-stack gh-stack --agent github-copilot --scope user
+gh skill install github/gh-stack
 copilot skill list
 ```
+
+When prompted, choose the `gh-stack` skill, GitHub Copilot, and user scope. User scope keeps the learner repository clean when the workshop checks `git status`.
 
 Start Copilot CLI from the learner repository root:
 
@@ -135,11 +136,11 @@ verification commands. Wait for approval before implementation.
 
 Approve the proposal only when:
 
-- The order is `main → tasks/model → tasks/validation → tasks/api`.
-- Every layer includes its own tests.
-- The model and validation layers exclude API code.
-- The first command is `gh stack init --base main tasks/model`.
-- The agent stops before pushing, submitting, synchronizing, or merging.
+- The order is `main → tasks/model → tasks/validation → tasks/api`
+- Every layer includes its own tests
+- The model and validation layers exclude API code
+- The first command is `gh stack init --base main tasks/model`
+- The agent stops before pushing, submitting, synchronizing, or merging
 
 ## Lab 2: Build three tested layers
 
@@ -215,35 +216,24 @@ Practice a specific lower-layer change: add `priority: 'normal'` to every task a
   <img src="images/feedback-cascade.webp" alt="A five-step flow for lower-layer feedback: update the model, cascade rebase, test the full stack, approve synchronization, and verify every live pull request." width="800">
 </p>
 
-1. Run `gh stack bottom`.
-2. Update the model and its test with the new `priority` default.
-3. Run the model tests and commit the correction.
-4. Inspect `gh stack view --json`.
-5. Get approval before `gh stack rebase`.
-6. Run the full tests from `tasks/api` and inspect every diff.
-7. Get approval before `gh stack push` or `gh stack sync`.
-8. Inspect every live pull request after the update.
+1. Run `gh stack bottom`
+2. Update the model and its test with the new `priority` default
+3. Run the model tests and commit the correction
+4. Inspect `gh stack view --json`
+5. Get approval before `gh stack rebase`
+6. Run the full tests from `tasks/api` and inspect every diff
+7. Get approval before `gh stack push` or `gh stack sync`
+8. Inspect every live pull request after the update
 
 Use `gh stack rebase --abort` if conflict resolution is uncertain. Stop rather than choosing a source of truth when local and remote stack definitions diverge.
-
-## Lab 5: Team adoption discussion
-
-Use the [team playbook](../team-playbook.md) to agree on:
-
-1. What qualifies for a stack.
-2. Maximum stack size.
-3. Required tests per layer.
-4. Review order and stack ownership.
-5. Who may rebase, synchronize, and merge.
-6. How the team handles independent workstreams.
 
 ## Completion criteria
 
 The learner can:
 
-- Explain why the three branches form one dependency chain.
-- Show that the agent used the repository instructions.
-- Evaluate the agent's plan rather than accepting it blindly.
-- Show one focused, green diff per pull request.
-- Verify live bases, heads, files, readiness, and stack linkage.
-- Explain which operations require human approval.
+- Explain why the three branches form one dependency chain
+- Show that the agent used the repository instructions
+- Evaluate the agent's plan rather than accepting it blindly
+- Show one focused, green diff per pull request
+- Verify live bases, heads, files, readiness, and stack linkage
+- Explain which operations require human approval

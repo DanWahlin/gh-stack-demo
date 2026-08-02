@@ -8,12 +8,11 @@ Learn GitHub Stacked PRs through a live three-PR stack, a GitHub CLI walkthrough
 
 ## Choose a path
 
-- **5 minutes:** Learn [how stacked PRs work](#how-stacked-prs-work).
-- **15 minutes:** [Review the live stack](docs/review-walkthrough.md).
-- **45–60 minutes:** [Build the canonical stack using the GitHub CLI (gh)](docs/build-the-stack.md).
-- **60 minutes:** Create a learner repository then run the [agentic workshop](docs/workshop/README.md).
-- **Team adoption:** Use the [team playbook](docs/team-playbook.md) and [lifecycle guide](docs/lifecycle.md).
-- **Training:** Use the [PowerPoint deck](https://github.com/DanWahlin/learn-github-stacked-prs/raw/refs/heads/main/github-stacked-prs.pptx) and [facilitator guide](docs/facilitator-guide.md).
+- **5 minutes:** Learn [how stacked PRs work](#how-stacked-prs-work)
+- **15 minutes:** [Review the live stack](docs/review-walkthrough.md)
+- **45–60 minutes:** [Build the canonical stack using the GitHub CLI (gh)](docs/build-the-stack.md)
+- **55 minutes:** Create a learner repository then run the [agentic workshop](docs/workshop/README.md)
+- **Training:** Use the [PowerPoint deck](https://github.com/DanWahlin/learn-github-stacked-prs/raw/refs/heads/main/github-stacked-prs.pptx) and [facilitator guide](docs/facilitator-guide.md)
 
 Keep the [`gh stack` cheat sheet](docs/cheat-sheet.md), [troubleshooting guide](docs/troubleshooting.md), and [glossary](docs/glossary.md) nearby after training.
 
@@ -50,10 +49,10 @@ flowchart TD
 
 Examples:
 
-- Model → validation → API: one stack.
-- Authentication and billing: separate stacks.
-- One isolated bug fix: one normal pull request.
-- Shared foundation followed by independent features: one foundational pull request, then separate stacks.
+- Model → validation → API: one stack
+- Authentication and billing: separate stacks
+- One isolated bug fix: one normal pull request
+- Shared foundation followed by independent features: one foundational pull request, then separate stacks
 
 ## Canonical live stack
 
@@ -70,11 +69,11 @@ Each pull request contains implementation and tests for its own behavior. The [t
 ## Hands-on requirements
 
 - Bash or Zsh on macOS or Linux. On Windows, use WSL or Git Bash.
-- Git 2.20 or newer, with `user.name` and `user.email` configured.
-- Node.js 20 or newer.
-- GitHub CLI 2.90 or newer, authenticated to GitHub.
-- Permission to create or push to a GitHub repository.
-- The [`github/gh-stack`](https://github.com/github/gh-stack) extension.
+- Git 2.20 or newer, with `user.name` and `user.email` configured
+- Node.js 20 or newer
+- GitHub CLI 2.90 or newer, authenticated to GitHub
+- Permission to create or push to a GitHub repository
+- The [`github/gh-stack`](https://github.com/github/gh-stack) extension
 
 Verify the setup:
 
@@ -88,7 +87,7 @@ gh auth status
 gh stack --version
 ```
 
-If the command is unavailable, install it once:
+If `gh stack --version` reports that `gh stack` is unavailable, install the extension once:
 
 ```sh
 gh extension install github/gh-stack
@@ -100,17 +99,20 @@ The root [`AGENTS.md`](AGENTS.md) gives coding agents the stack-selection rules,
 
 The workshop focuses on:
 
-- [GitHub Copilot CLI](https://github.com/features/copilot/cli).
-- [GitHub Copilot desktop app](https://github.com/features/ai/github-app).
+- [GitHub Copilot](https://github.com/features/copilot)
+- [GitHub Copilot CLI](https://github.com/features/copilot/cli)
+- [GitHub Copilot desktop app](https://github.com/features/ai/github-app)
 
 Other agentic coding tools can be used when they load the repository guidance and can run Git, GitHub CLI, tests, and `gh stack`.
 
-For the GitHub Copilot CLI path, install GitHub's official `gh-stack` agent skill once at user scope before starting the workshop. User scope keeps the learner repository clean:
+For the GitHub Copilot CLI path, install GitHub's official `gh-stack` agent skill before starting the workshop:
 
 ```sh
-gh skill install github/gh-stack gh-stack --agent github-copilot --scope user
+gh skill install github/gh-stack
 copilot skill list
 ```
+
+When prompted, choose the `gh-stack` skill, GitHub Copilot, and user scope. User scope keeps the learner repository clean.
 
 The skill gives Copilot reusable `gh stack` command and recovery guidance. The repository's [`AGENTS.md`](AGENTS.md) defines the project-specific boundaries, approvals, and verification rules. See GitHub's [Stack AI-generated code in pull requests](https://docs.github.com/copilot/tutorials/stack-ai-generated-code-in-pull-requests) tutorial for the official skill-based workflow.
 
@@ -124,7 +126,7 @@ exact gh stack commands, and final verification commands. Wait for approval
 before implementation.
 ```
 
-See the [agentic coding workflow](docs/ai-agent-workflow.md) for the complete prompt sequence.
+The [agentic workshop](docs/workshop/README.md) provides the complete prompt sequence from planning through feedback.
 
 ## Create a learner repository
 
@@ -134,27 +136,10 @@ Use the repository-copy script instead:
 
 ```sh
 git clone https://github.com/DanWahlin/learn-github-stacked-prs.git
-
-learn-github-stacked-prs/scripts/create-workshop-copy.sh \
-  YOUR-OWNER/my-stacked-prs-workshop \
-  --build \
-  --private
+node learn-github-stacked-prs/scripts/create-workshop-copy.mjs YOUR-OWNER/my-stacked-prs-workshop --build --private
 ```
 
 Build mode lets learners create the stack. Ready mode recreates the complete canonical stack for facilitator rehearsal, shortened sessions, or recovery. See [Create a workshop repository](docs/workshop-copies.md).
-
-## Resource map
-
-- [Build the canonical stack](docs/build-the-stack.md)
-- [Agentic workshop](docs/workshop/README.md)
-- [Review walkthrough](docs/review-walkthrough.md)
-- [Agentic coding workflow](docs/ai-agent-workflow.md)
-- [Facilitator guide](docs/facilitator-guide.md)
-- [Team playbook](docs/team-playbook.md)
-- [Lifecycle guide](docs/lifecycle.md)
-- [`gh stack` cheat sheet](docs/cheat-sheet.md)
-- [Troubleshooting](docs/troubleshooting.md)
-- [Glossary](docs/glossary.md)
 
 ## Contributing
 

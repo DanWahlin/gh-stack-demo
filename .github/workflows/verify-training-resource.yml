@@ -44,6 +44,10 @@ jobs:
         with:
           python-version: "3.12"
 
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+
       - name: Check documentation
         run: python scripts/check-docs.py
 
@@ -52,8 +56,8 @@ jobs:
 
       - name: Check workshop copy script
         run: |
-          bash -n scripts/create-workshop-copy.sh
-          shellcheck scripts/create-workshop-copy.sh
+          node --check scripts/create-workshop-copy.mjs
+          node --test scripts/create-workshop-copy.test.mjs
 
       - name: Install gh-stack
         env:

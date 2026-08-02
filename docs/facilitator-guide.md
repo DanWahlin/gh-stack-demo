@@ -12,7 +12,7 @@ Use the repository's [PowerPoint deck](../github-stacked-prs.pptx) with this gui
 | 10–13 minutes | Demonstrate `gh stack view` and focused diffs |
 | 13–15 minutes | Explain when not to use a stack and take questions |
 
-## Sixty-minute workshop
+## Fifty-five-minute workshop
 
 Treat learner-repository creation as prework. Add 5–10 minutes if learners must create repositories during the session.
 
@@ -23,7 +23,6 @@ Treat learner-repository creation as prework. Add 5–10 minutes if learners mus
 | 15–35 minutes | Build and test three layers |
 | 35–45 minutes | Verify, submit, and inspect the live pull requests |
 | 45–55 minutes | Demonstrate lower-layer feedback |
-| 55–60 minutes | Discuss team adoption |
 
 Run the exercises from the [agentic workshop](workshop/README.md).
 
@@ -32,33 +31,33 @@ Run the exercises from the [agentic workshop](workshop/README.md).
 Use build mode for the full workshop:
 
 ```sh
-scripts/create-workshop-copy.sh \
-  YOUR-OWNER/my-stacked-prs-workshop \
-  --build \
-  --private
+node scripts/create-workshop-copy.mjs YOUR-OWNER/my-stacked-prs-workshop --build --private
 ```
 
 Use ready mode for a shorter session, facilitator rehearsal, or learner recovery:
 
 ```sh
-scripts/create-workshop-copy.sh \
-  YOUR-OWNER/my-ready-stacked-prs-workshop \
-  --ready \
-  --private
+node scripts/create-workshop-copy.mjs YOUR-OWNER/my-ready-stacked-prs-workshop --ready --private
 ```
 
 Do not use forks. Forks do not copy pull requests or the GitHub stack relationship. See [Create a workshop repository](workshop-copies.md) for the setup contract.
 
 ## Agent setup
 
+### [GitHub Copilot](https://github.com/features/copilot)
+
+Open the learner repository in a supported IDE and use agent mode from the repository workspace. Confirm that `AGENTS.md` is applied and that the agent can run the required terminal commands.
+
 ### [GitHub Copilot CLI](https://github.com/features/copilot/cli)
 
-Install GitHub's official `gh-stack` skill once at user scope so it does not make the learner repository dirty:
+Install GitHub's official `gh-stack` skill:
 
 ```sh
-gh skill install github/gh-stack gh-stack --agent github-copilot --scope user
+gh skill install github/gh-stack
 copilot skill list
 ```
+
+When prompted, choose the `gh-stack` skill, GitHub Copilot, and user scope so the learner repository stays clean.
 
 Then start Copilot CLI. Ask learners to run `/instructions`, the view for custom instruction files, and confirm that `AGENTS.md` is loaded. The skill provides reusable CLI expertise; `AGENTS.md` remains the authority for workshop boundaries and approvals.
 
@@ -91,29 +90,29 @@ Verify that the canonical pull requests are open, ready for review, and focused.
 
 Approve the plan only when it includes:
 
-- Trunk `main`.
-- `tasks/model`, `tasks/validation`, and `tasks/api` in that order.
-- One responsibility and explicit exclusions per layer.
-- Implementation and tests together in every layer.
-- `gh stack init --base main tasks/model`.
-- Local verification before submission.
-- Approval before push, submission, synchronization, or merge.
-- Live GitHub verification after submission.
+- Trunk `main`
+- `tasks/model`, `tasks/validation`, and `tasks/api` in that order
+- One responsibility and explicit exclusions per layer
+- Implementation and tests together in every layer
+- `gh stack init --base main tasks/model`
+- Local verification before submission
+- Approval before push, submission, synchronization, or merge
+- Live GitHub verification after submission
 
 Reject the plan if the agent opens every pull request against `main`, puts all tests in the top layer, uses `gh pr create`, mixes layer responsibilities, or plans remote operations without approval.
 
 ## Teaching sequence
 
-1. Show the monolithic-change problem.
-2. Draw the branch graph and pull request base graph.
-3. Explain that `AGENTS.md` contains standing rules while the prompt defines the current task.
-4. Verify that the agent understood the instructions.
-5. Require a stack proposal before coding.
-6. Make learners approve the review and test boundaries.
-7. Implement and verify one layer at a time.
-8. Review local evidence before approving submission.
-9. Inspect every live pull request.
-10. Finish with team ownership and policy.
+1. Show the monolithic-change problem
+2. Draw the branch graph and pull request base graph
+3. Explain that `AGENTS.md` contains standing rules while the prompt defines the current task
+4. Verify that the agent understood the instructions
+5. Require a stack proposal before coding
+6. Make learners approve the review and test boundaries
+7. Implement and verify one layer at a time
+8. Review local evidence before approving submission
+9. Inspect every live pull request
+10. Finish with team ownership and policy
 
 ## Common failures
 
@@ -153,15 +152,15 @@ They can, but one stack owner must integrate changes and own synchronization. Us
 
 Answers:
 
-1. `tasks/model`.
-2. Humans must approve review and test boundaries before implementation creates coupling.
-3. `gh stack submit --auto --open`.
-4. Live bases, heads, changed files, readiness, tests, and stack linkage.
-5. `gh stack rebase`.
+1. `tasks/model`
+2. Humans must approve review and test boundaries before implementation creates coupling
+3. `gh stack submit --auto --open`
+4. Live bases, heads, changed files, readiness, tests, and stack linkage
+5. `gh stack rebase`
 
 ## Fallback
 
-- Keep the public canonical stack open for inspection.
-- Do not merge or rewrite canonical demonstration branches during class.
-- If an agent is unavailable, use the prompts as facilitator-led planning exercises.
-- If GitHub access fails, use screenshots and demonstrate local `gh stack view --json` output.
+- Keep the public canonical stack open for inspection
+- Do not merge or rewrite canonical demonstration branches during class
+- If an agent is unavailable, use the prompts as facilitator-led planning exercises
+- If GitHub access fails, use screenshots and demonstrate local `gh stack view --json` output

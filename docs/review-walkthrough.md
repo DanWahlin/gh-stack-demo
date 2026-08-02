@@ -73,18 +73,18 @@ A tests-only bottom pull request stays red until the implementation arrives in a
 
 ## Review sequence
 
-1. Review the tested model contract.
-2. Review validation against the approved model.
-3. Review the API against the approved domain behavior.
-4. Confirm that every branch passes its applicable tests.
-5. [Merge only the approved portion of the stack](lifecycle.md#8-merge).
+1. Review the tested model contract
+2. Review validation against the approved model
+3. Review the API against the approved domain behavior
+4. Confirm that every branch passes its applicable tests
+5. Merge only the approved portion of the stack, then verify the final GitHub state
 
 ## What a poor stack looks like
 
 Stop and restructure when:
 
-- A PR contains several unrelated responsibilities.
-- Tests are deferred to a separate layer even though lower behavior can fail independently.
-- A lower PR is intentionally red and cannot satisfy required checks.
-- Formatting or generated-file churn hides the functional change.
-- Reviewers cannot state the acceptance criterion for one layer.
+- A PR contains several unrelated responsibilities
+- Tests are deferred to a separate layer even though lower behavior can fail independently
+- A lower PR is intentionally red and cannot satisfy required checks
+- Formatting or generated-file churn hides the functional change
+- Reviewers cannot state the acceptance criterion for one layer

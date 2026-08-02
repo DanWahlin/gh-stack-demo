@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check local Markdown links and fenced-code balance."""
+"""Check local Markdown links, fences, and list punctuation."""
 
 from __future__ import annotations
 
@@ -11,6 +11,7 @@ from urllib.parse import unquote
 ROOT = Path(__file__).resolve().parents[1]
 MARKDOWN_TARGET = re.compile(r"!?\[[^]]*]\(([^)]+)\)")
 HTML_SOURCE = re.compile(r'<(?:img|source)\b[^>]*\bsrc="([^"]+)"')
+LIST_ITEM = re.compile(r"^\s*(?:[-*+]|\d+\.)\s+(.*)$")
 
 
 def markdown_files() -> list[Path]:
@@ -30,6 +31,24 @@ def main() -> int:
         text = path.read_text(encoding="utf-8")
         if text.count("```") % 2:
             failures.append(f"{path.relative_to(ROOT)} has unbalanced code fences")
+
+        in_fence = False
+        for line_number, line in enumerate(text.splitlines(), 1):
+            if line.lstrip().startswith("```"):
+                in_fence = not in_fence
+                continue
+            if in_fence:
+                continue
+            match = LIST_ITEM.match(line)
+            if not match or not match.group(1).endswith("."):
+                continue
+            visible = re.sub(r"\]\([^)]+\)", "]", match.group(1))
+            visible = re.sub(r"`[^`]+`", "CODE", visible)
+            if not re.search(r"\.\s+\S", visible[:-1]):
+                failures.append(
+                    f"{path.relative_to(ROOT)}:{line_number} has a terminal period "
+                    "on a single-sentence list item"
+                )
 
         targets = MARKDOWN_TARGET.findall(text) + HTML_SOURCE.findall(text)
         for target in targets:

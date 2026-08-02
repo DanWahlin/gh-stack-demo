@@ -4,10 +4,10 @@ Contributions should make this stacked pull request training clearer or easier t
 
 ## Before making changes
 
-1. Read [`AGENTS.md`](AGENTS.md).
-2. Decide whether the work needs a normal pull request, one stack, or separate stacks.
-3. Open an issue or discussion before changing the canonical workshop structure or public live-stack contract.
-4. Do not modify, merge, or close the public validation pull requests.
+1. Read [`AGENTS.md`](AGENTS.md)
+2. Decide whether the work needs a normal pull request, one stack, or separate stacks
+3. Open an issue or discussion before changing the canonical workshop structure or public live-stack contract
+4. Do not modify, merge, or close the public validation pull requests
 
 ## Validate documentation changes
 
@@ -18,9 +18,11 @@ python scripts/check-docs.py
 python scripts/check-presentation.py
 python scripts/check-cli-contract.py
 python scripts/verify-demo.py
-bash -n scripts/create-workshop-copy.sh
-shellcheck scripts/create-workshop-copy.sh
+node --check scripts/create-workshop-copy.mjs
+node --test scripts/create-workshop-copy.test.mjs
 ```
+
+Use periods only when a list item contains multiple sentences. Do not add one to a single-sentence bullet.
 
 ## Validate code examples
 

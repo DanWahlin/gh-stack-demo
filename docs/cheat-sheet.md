@@ -42,11 +42,11 @@ GitHub evaluates branch protection and repository rules during the merge. The co
 ## Safety model
 
 - `submit` creates or updates remote pull request state. `--auto` creates new drafts; `--open` marks pull requests ready.
-- `rebase` and `sync` can change commit IDs.
-- `push` updates remote branch tips with force-with-lease protection.
-- `sync --prune` deletes local branches for merged pull requests; it does not delete the remote branches.
-- `merge` changes the trunk branch or enters the stack into a merge queue.
-- Agents need explicit approval before rebase, submission, push or sync, draft-state changes, and merge.
+- `rebase` and `sync` can change commit IDs
+- `push` updates remote branch tips with force-with-lease protection
+- `sync --prune` deletes local branches for merged pull requests; it does not delete the remote branches
+- `merge` changes the trunk branch or enters the stack into a merge queue
+- Agents need explicit approval before rebase, submission, push or sync, draft-state changes, and merge
 - Never use a plain force push. The extension uses force-with-lease safeguards where history updates are required.
 
 ## Status symbols

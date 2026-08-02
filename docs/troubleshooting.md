@@ -26,9 +26,9 @@ Commit or stash work before rebasing or synchronizing.
 
 ## Recovery rules
 
-1. Do not run a plain force push.
-2. Do not rewrite another contributor's stack branches.
-3. Use `gh stack rebase --abort` when conflict resolution is uncertain.
-4. Re-run layer tests and full-stack tests after recovery.
-5. Verify bases, heads, diffs, and PR state before resuming review.
-6. Record the root cause when the same failure could affect other team members.
+1. Do not run a plain force push
+2. Do not rewrite another contributor's stack branches
+3. Use `gh stack rebase --abort` when conflict resolution is uncertain
+4. Re-run layer tests and full-stack tests after recovery
+5. Verify bases, heads, diffs, and PR state before resuming review
+6. Record the root cause when the same failure could affect other team members
