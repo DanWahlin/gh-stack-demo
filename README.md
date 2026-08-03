@@ -14,7 +14,7 @@ Learn GitHub Stacked PRs through a live three-PR stack, a GitHub CLI walkthrough
 - **55 minutes:** Run the [AI coding agent workshop](docs/workshop/README.md)
 - **Training:** Use the [PowerPoint deck](https://github.com/DanWahlin/learn-github-stacked-prs/raw/refs/heads/main/github-stacked-prs.pptx) and [facilitator guide](docs/facilitator-guide.md)
 
-Keep the [`gh stack` cheat sheet](docs/cheat-sheet.md), [troubleshooting guide](docs/troubleshooting.md), and [glossary](docs/glossary.md) nearby after training.
+Keep the [gh stack cheat sheet](docs/cheat-sheet.md), [troubleshooting guide](docs/troubleshooting.md), and [glossary](docs/glossary.md) nearby after training.
 
 ## How stacked PRs work
 
