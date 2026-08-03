@@ -56,7 +56,7 @@ Examples:
 
 ## Canonical live stack
 
-The open pull requests in this repository provide a stable example for workshops and reviews:
+The open pull requests in this repository provide an example of Stacked PRs for workshops and reviews:
 
 | Layer | Pull request | Base | Head | Changed files | Tests on branch |
 | --- | --- | --- | --- | --- | --- |
