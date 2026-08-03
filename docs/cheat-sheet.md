@@ -1,6 +1,6 @@
 # `gh stack` cheat sheet
 
-This reference is checked against the installed `gh stack` release by `scripts/check-cli-contract.py`.
+This reference is checked against the installed `gh stack` release by `scripts/check-cli-contract.py` and compared with GitHub's [Stacked pull requests CLI commands](https://docs.github.com/pull-requests/reference/stacked-prs-cli-commands).
 
 ## Create and inspect
 
@@ -19,7 +19,7 @@ This reference is checked against the installed `gh stack` release by `scripts/c
 
 | Goal | Command | Important behavior |
 | --- | --- | --- |
-| Submit PRs interactively | `gh stack submit` | Pushes branches and opens the PR editor |
+| Submit PRs interactively | `gh stack submit` | Pushes branches, opens the editor, then creates or updates PRs and the stack |
 | Submit drafts non-interactively | `gh stack submit --auto` | Generates titles and creates new pull requests as drafts |
 | Mark the submitted stack ready | `gh stack submit --auto --open` | Marks new and existing pull requests ready for review |
 | Push existing branches | `gh stack push` | Uses per-branch force-with-lease checks |
@@ -33,15 +33,15 @@ This reference is checked against the installed `gh stack` release by `scripts/c
 
 | Goal | Command | Important behavior |
 | --- | --- | --- |
-| Choose interactively | `gh stack merge` | Selects how far up the stack to merge |
-| Merge through a PR | `gh stack merge 42` | Requests a stack merge through PR #42 |
-| Merge non-interactively | `gh stack merge --yes --squash` | Requests a squash merge of the whole stack without prompting |
+| Choose interactively | `gh stack merge` | Selects how far up the current stack to merge, the merge method, and confirmation |
+| Merge by stack or PR number | `gh stack merge 42` | Treats `42` as a stack number first, then as a PR number |
+| Merge non-interactively | `gh stack merge --yes --squash` | Requests a whole-stack squash merge without prompting |
 
-GitHub evaluates branch protection and repository rules during the merge. The command does not bypass requirements. If the repository uses a merge queue, GitHub controls when each queued layer completes; verify the final state instead of assuming simultaneous completion.
+A pull request selection merges that pull request and every unmerged pull request below it. A mid-stack pull request cannot merge by itself. GitHub evaluates branch protection and repository rules during the merge, and the command does not bypass them. If the repository uses a merge queue, the queue chooses the merge method and controls when each queued layer completes; verify the final state instead of assuming simultaneous completion.
 
 ## Safety model
 
-- `submit` creates or updates remote pull request state. `--auto` creates new drafts; `--open` marks pull requests ready.
+- `submit` creates or updates remote pull request and stack state. `--auto` creates new pull requests as drafts; `--open` marks new and existing pull requests ready.
 - `rebase` and `sync` can change commit IDs
 - `push` updates remote branch tips with force-with-lease protection
 - `sync --prune` deletes local branches for merged pull requests; it does not delete the remote branches

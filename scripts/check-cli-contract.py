@@ -8,9 +8,15 @@ import sys
 
 
 CONTRACTS = [
-    (["gh", "stack", "init", "--help"], ["--base", "bottom to top"]),
+    (
+        ["gh", "stack", "init", "--help"],
+        ["--base", "bottom to top", "Existing branches are adopted automatically"],
+    ),
     (["gh", "stack", "add", "--help"], ["Add a new branch on top"]),
-    (["gh", "stack", "view", "--help"], ["--json"]),
+    (
+        ["gh", "stack", "view", "--help"],
+        ["--json", "PR merged", "PR queued", "PR open", "Needs rebase"],
+    ),
     (["gh", "stack", "up", "--help"], ["further up in the stack"]),
     (["gh", "stack", "down", "--help"], ["further down in the stack"]),
     (["gh", "stack", "top", "--help"], ["top branch of the stack"]),
@@ -18,17 +24,42 @@ CONTRACTS = [
     (["gh", "stack", "trunk", "--help"], ["trunk branch of the current stack"]),
     (
         ["gh", "stack", "submit", "--help"],
-        ["--auto", "--open", "created as drafts unless you pass"],
+        [
+            "--auto",
+            "--open",
+            "new PRs are created as drafts unless you pass",
+            "Creates new PRs for the included branches",
+            "Creates or updates the stack on GitHub",
+        ],
     ),
-    (["gh", "stack", "push", "--help"], ["force-with-lease"]),
-    (["gh", "stack", "sync", "--help"], ["--prune", "diverged", "non-interactive"]),
+    (
+        ["gh", "stack", "push", "--help"],
+        ["force-with-lease", "Updates are not atomic"],
+    ),
+    (
+        ["gh", "stack", "sync", "--help"],
+        [
+            "--prune",
+            "diverged",
+            "non-interactive",
+            "Pushes all branches atomically",
+            "Sync never opens pull requests",
+        ],
+    ),
     (
         ["gh", "stack", "rebase", "--help"],
         ["--abort", "--continue"],
     ),
     (
         ["gh", "stack", "merge", "--help"],
-        ["--yes", "--squash", "--merge-method"],
+        [
+            "--yes",
+            "--squash",
+            "--merge-method",
+            "bare number is treated first as a stack number",
+            "all-or-nothing operation",
+            "If the base branch uses a merge queue",
+        ],
     ),
 ]
 
