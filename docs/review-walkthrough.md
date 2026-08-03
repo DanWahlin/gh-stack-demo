@@ -8,9 +8,9 @@ Treat the public stack as read-only. Inspect it, but do not push, synchronize, c
 
 ```mermaid
 flowchart BT
-    Main["main"] --> Model["tasks/model"]
-    Model --> Validation["tasks/validation"]
-    Validation --> API["tasks/api"]
+    Main["main (trunk)"] --- Model["PR #1: tasks/model<br/>base: main"]
+    Model --- Validation["PR #2: tasks/validation<br/>base: tasks/model"]
+    Validation --- API["PR #3: tasks/api<br/>base: tasks/validation"]
 ```
 
 Every branch passes its tests. Each layer includes the tests for the behavior it introduces instead of deferring them to the top layer.

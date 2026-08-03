@@ -22,9 +22,9 @@ A stacked pull request is one reviewable layer in a linear dependency chain. Eac
 
 ```mermaid
 flowchart BT
-    Main["main"] --> Model["tasks/model"]
-    Model --> Validation["tasks/validation"]
-    Validation --> API["tasks/api"]
+    Main["main (trunk)"] --- Model["PR #1: tasks/model<br/>base: main"]
+    Model --- Validation["PR #2: tasks/validation<br/>base: tasks/model"]
+    Validation --- API["PR #3: tasks/api<br/>base: tasks/validation"]
 ```
 
 | Ordinary pull request | Stacked pull requests |
