@@ -48,9 +48,9 @@ GitHub stacks must be linear, and every branch in a stack must be in the same re
 
 Examples:
 
-- Model → validation → API: one stack
+- One task feature split into model → validation → API layers: one stack
 - Independent authentication and billing changes: separate normal pull requests
-- Authentication and billing each have dependent layers: separate stacks
+- Authentication and billing changes that each have dependent layers: separate stacks
 
 ## Canonical live stack
 
