@@ -11,7 +11,7 @@ Learn GitHub Stacked PRs through a live three-PR stack, a GitHub CLI walkthrough
 - **5 minutes:** Learn [how stacked PRs work](#how-stacked-prs-work)
 - **15 minutes:** [Review the live stack](docs/review-walkthrough.md)
 - **45–60 minutes:** [Build the canonical stack using the GitHub CLI (gh)](docs/build-the-stack.md)
-- **55 minutes:** Run the [AI coding agent workshop](docs/workshop/README.md) after creating the learner repository as prework
+- **55 minutes:** Run the [AI coding agent workshop](docs/workshop/README.md)
 - **Training:** Use the [PowerPoint deck](https://github.com/DanWahlin/learn-github-stacked-prs/raw/refs/heads/main/github-stacked-prs.pptx) and [facilitator guide](docs/facilitator-guide.md)
 
 Keep the [`gh stack` cheat sheet](docs/cheat-sheet.md), [troubleshooting guide](docs/troubleshooting.md), and [glossary](docs/glossary.md) nearby after training.
@@ -51,18 +51,16 @@ Examples:
 - Model → validation → API: one stack
 - Independent authentication and billing changes: separate normal pull requests
 - Authentication and billing each have dependent layers: separate stacks
-- One isolated bug fix: one normal pull request
-- Shared foundation followed by independent features: merge the foundation first, then start separate stacks from the updated trunk
 
 ## Canonical live stack
 
 The open pull requests in this repository provide a working stacked PR example for workshops and reviews:
 
-| Layer | Pull request | Base | Head | Changed files | Tests on branch |
-| --- | --- | --- | --- | --- | --- |
-| Model | [PR #21](https://github.com/DanWahlin/learn-github-stacked-prs/pull/21) | `main` | `tasks/model` | `src/tasks.js`, `test/tasks.model.test.js` | 1 |
-| Validation | [PR #22](https://github.com/DanWahlin/learn-github-stacked-prs/pull/22) | `tasks/model` | `tasks/validation` | `src/tasks.js`, `test/tasks.validation.test.js` | 4 |
-| API | [PR #23](https://github.com/DanWahlin/learn-github-stacked-prs/pull/23) | `tasks/validation` | `tasks/api` | `package.json`, `src/server.js`, `test/tasks.api.test.js` | 6 |
+| Layer | Pull request | Base ← head | Purpose |
+| --- | --- | --- | --- |
+| Model | [PR #21](https://github.com/DanWahlin/learn-github-stacked-prs/pull/21) | `main` ← `tasks/model` | Tested task model |
+| Validation | [PR #22](https://github.com/DanWahlin/learn-github-stacked-prs/pull/22) | `tasks/model` ← `tasks/validation` | Tested title validation |
+| API | [PR #23](https://github.com/DanWahlin/learn-github-stacked-prs/pull/23) | `tasks/validation` ← `tasks/api` | Tested task API |
 
 Each pull request contains implementation and tests for its own behavior. The [training-resource workflow](https://github.com/DanWahlin/learn-github-stacked-prs/actions/workflows/verify-training-resource.yml) checks the documented pull request boundaries and runs the tests on every canonical branch.
 
@@ -126,19 +124,7 @@ gh skill install github/gh-stack gh-stack --agent github-copilot --scope user
 copilot skill list
 ```
 
-The CLI extension performs the stack operations. The skill gives Copilot reusable command and recovery guidance, while the repository's [`AGENTS.md`](AGENTS.md) defines the project-specific boundaries, approvals, and verification rules. User scope keeps the learner repository clean. See GitHub's [Stack AI-generated code in pull requests](https://docs.github.com/copilot/tutorials/stack-ai-generated-code-in-pull-requests) tutorial for the official skill-based workflow.
-
-Start with a planning-only prompt:
-
-```text
-Read AGENTS.md and inspect the repository. Do not modify files.
-
-Propose the trunk, branch order, responsibility and tests for each pull request,
-exact gh stack commands, and final verification commands. Wait for approval
-before implementation.
-```
-
-The [AI coding agent workshop](docs/workshop/README.md) provides the complete prompt sequence from planning through feedback.
+The `gh-stack` skill provides reusable CLI guidance at user scope. `AGENTS.md` defines this repository's boundaries, approvals, and verification requirements. Follow the [AI coding agent workshop](docs/workshop/README.md) for the complete prompt sequence. See GitHub's [Stack AI-generated code in pull requests](https://docs.github.com/copilot/tutorials/stack-ai-generated-code-in-pull-requests) tutorial for the official skill-based workflow.
 
 ## Contributing
 
