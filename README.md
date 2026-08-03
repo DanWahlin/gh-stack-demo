@@ -6,9 +6,6 @@
 
 Learn GitHub Stacked PRs through a live three-PR stack, a GitHub CLI walkthrough, and an AI coding agent workshop.
 
-> [!NOTE]
-> GitHub Stacked PRs are in public preview and subject to change. See the current [GitHub documentation](https://gh.io/stacks).
-
 ## Choose a path
 
 - **5 minutes:** Learn [how stacked PRs work](#how-stacked-prs-work)
