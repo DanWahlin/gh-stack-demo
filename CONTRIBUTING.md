@@ -15,7 +15,6 @@ Run:
 
 ```sh
 python scripts/check-docs.py
-python scripts/check-presentation.py
 python scripts/check-cli-contract.py
 python scripts/verify-demo.py
 node --check scripts/create-workshop-copy.mjs

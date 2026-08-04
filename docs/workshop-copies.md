@@ -43,7 +43,7 @@ The recreated PRs receive new numbers. Reviews, comments, checks, and PR history
 - Node.js 20 or newer
 - Authenticated GitHub CLI 2.90 or newer
 - `github/gh-stack`
-- GitHub's `gh-stack` agent skill for the [GitHub Copilot CLI](https://github.com/features/copilot/cli) workshop path
+- GitHub's `gh-stack` agent skill for the [GitHub Copilot CLI](https://github.com/features/copilot/cli) or [GitHub Copilot app](https://github.com/features/ai/github-app) workshop path
 - Configured `git user.name` and `git user.email`
 - Permission to create a repository under the selected owner
 
@@ -59,7 +59,7 @@ git config user.name
 git config user.email
 ```
 
-For the GitHub Copilot CLI path, also run `copilot skill list` and confirm that `gh-stack` appears.
+For the GitHub Copilot CLI path, run `copilot skill list` and confirm that `gh-stack` appears. In the GitHub Copilot app, confirm it under **Settings → Skills**.
 
 ## Safety behavior
 

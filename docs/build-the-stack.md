@@ -310,6 +310,33 @@ After submission, inspect the live pull requests:
 
 The open training stack in this repository is continuously checked by the [training-resource verification workflow](https://github.com/DanWahlin/learn-github-stacked-prs/actions/workflows/verify-training-resource.yml).
 
+## 7. Keep the stack current
+
+Each layer starts from the branch below it, not from `main`. If trunk or a lower layer advances, inspect the stack:
+
+```sh
+gh stack view --json
+```
+
+A branch whose parent is no longer an ancestor reports `needsRebase: true`. For routine synchronization, run:
+
+```sh
+gh stack sync
+```
+
+`sync` fetches and reconciles remote stack state, fast-forwards trunk when possible, cascade-rebases stale branches, pushes the updated branches, and synchronizes pull request and stack state. It does not open pull requests.
+
+Use the split workflow when you want to test and inspect before updating remote branches:
+
+```sh
+gh stack rebase
+npm test
+gh stack view --json
+# Inspect every parent-to-child diff, then approve the remote update.
+gh stack push
+```
+
+`rebase` is also the recovery path when `sync` reports conflicts. Use `gh stack rebase --abort` if conflict resolution is uncertain.
 
 
 ## Useful commands after submission
@@ -328,7 +355,7 @@ gh stack push
 # Fetch, rebase, push, and synchronize PR/stack state.
 gh stack sync
 
-# Fetch and cascade-rebase locally without pushing or syncing PR state.
+# Fetch and cascade-rebase locally without pushing branches or updating the remote stack object.
 gh stack rebase
 
 # Interactively land all or part of the stack.

@@ -75,7 +75,7 @@ Maintenance commands require extra care:
 
 - `gh stack rebase` rewrites local commit IDs. Get approval first. Use `gh stack rebase --abort` if conflict resolution is uncertain.
 - `gh stack push` updates remote stack branches with force-with-lease protection. Get approval first and verify every branch afterward.
-- `gh stack sync` fetches, reconciles, rebases, pushes, and synchronizes pull request state. Get approval first. Stop on divergence or an unexpected prompt.
+- `gh stack sync` fetches, reconciles local and remote stack state, conditionally rebases stale branches, pushes, and synchronizes existing pull request and stack state. It never opens pull requests; use `gh stack submit` for that. Get approval first. Stop on divergence or an unexpected prompt.
 - `gh stack merge --yes --squash` requests a non-interactive squash merge. Get explicit approval and verify the final GitHub state.
 
 Do not use plain `git push --force`. Do not replace `gh stack submit` with manual `gh pr create` commands for a tracked stack. See [`docs/cheat-sheet.md`](docs/cheat-sheet.md) for the core workshop commands and GitHub's [Stacked PR CLI reference](https://docs.github.com/pull-requests/reference/stacked-prs-cli-commands) for every command, flag, and exit code.

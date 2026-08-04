@@ -1,8 +1,8 @@
-# Agentic stacked PRs workshop
+# Stacked PRs with an AI coding agent
 
 Build the same three-layer stack shown in the canonical pull requests, using an AI coding agent while keeping a human in control of branch boundaries, tests, publication, and merge decisions.
 
-The 55-minute workshop uses [GitHub Copilot](https://github.com/features/copilot), [GitHub Copilot CLI](https://github.com/features/copilot/cli), or the [GitHub Copilot desktop app](https://github.com/features/ai/github-app). Other agentic coding tools can be used if they load `AGENTS.md` and can run the required terminal commands.
+The 55-minute workshop uses [GitHub Copilot](https://github.com/features/copilot), [GitHub Copilot CLI](https://github.com/features/copilot/cli), or the [GitHub Copilot app](https://github.com/features/ai/github-app). Other AI coding agents can be used if they load `AGENTS.md` and can run the required terminal commands.
 
 ## Learning objectives
 
@@ -24,10 +24,10 @@ Run the shell commands from Bash or Zsh on macOS or Linux. On Windows, use Windo
 | Node.js 20 or newer | `node --version` |
 | GitHub CLI 2.90 or newer | `gh --version` and `gh auth status` |
 | `github/gh-stack` | `gh stack --version` |
-| GitHub Copilot, GitHub Copilot CLI, desktop app, or another coding agent | Confirm that the agent can read the repository and run terminal commands |
-| GitHub's `gh-stack` agent skill for the Copilot CLI path | Installed and verified in Lab 0 |
+| GitHub Copilot, GitHub Copilot CLI, GitHub Copilot app, or another coding agent | Confirm that the agent can read the repository and run terminal commands |
+| GitHub's `gh-stack` agent skill for the Copilot CLI or app path | Installed and verified in Lab 0 |
 
-## Prework: create the learner repository
+## Create the learner repository
 
 Do not fork the training repository. Create an isolated private repository in build mode:
 
@@ -36,7 +36,7 @@ git clone https://github.com/DanWahlin/learn-github-stacked-prs.git
 node learn-github-stacked-prs/scripts/create-workshop-copy.mjs YOUR-OWNER/my-stacked-prs-workshop --build --private
 ```
 
-The copy includes `AGENTS.md` but not the canonical training branches or pull requests. Run the workshop from the new repository directory. If repository creation is not completed as prework, allow 5–10 additional minutes.
+The copy includes `AGENTS.md` but not the canonical training branches or pull requests. Run the workshop from the new repository directory. If repository creation is not completed beforehand, allow 5–10 additional minutes.
 
 ## Workshop map
 
@@ -60,20 +60,27 @@ gh auth status
 gh stack --version
 ```
 
+### Install GitHub's official `gh-stack` skill for Copilot CLI or the app
+
+```sh
+gh skill install github/gh-stack gh-stack --agent github-copilot --scope user
+```
+
+User scope makes the skill available to Copilot CLI and the GitHub Copilot app while keeping the learner repository clean when the workshop checks `git status`.
+
+Copilot can invoke an installed skill by placing `/` before its name, so this skill is `/gh-stack`.
+
 ### [GitHub Copilot](https://github.com/features/copilot)
 
 Open the learner repository in a supported IDE and use agent mode from the repository workspace. Verify that `AGENTS.md` is applied and that the agent can run the required terminal commands.
 
 ### GitHub Copilot CLI
 
-Install GitHub's official skill:
+Confirm that the skill is available:
 
 ```sh
-gh skill install github/gh-stack
 copilot skill list
 ```
-
-When prompted, choose the `gh-stack` skill, GitHub Copilot, and user scope. User scope keeps the learner repository clean when the workshop checks `git status`.
 
 Start Copilot CLI from the learner repository root:
 
@@ -85,9 +92,11 @@ Run `/instructions`, Copilot CLI's view for custom instruction files, and verify
 
 The skill covers `gh stack` commands. `AGENTS.md` defines the workshop's stack, test boundaries, approval gates, and required evidence. Check that the agent loaded both.
 
-### GitHub Copilot desktop app
+### GitHub Copilot app
 
-Open the learner repository in the desktop app. Start a session in the **local repository** so the agent operates on the same branches and stack metadata used by the workshop. Reference `@AGENTS.md` in the first prompt.
+Skills configured for GitHub Copilot CLI are automatically available in the app. Confirm that `gh-stack` appears under **Settings → Skills**.
+
+Open the learner repository in the app. Start a session in the **local repository** so the agent operates on the same branches and stack metadata used by the workshop. Reference `@AGENTS.md` and `/gh-stack` in the first prompt.
 
 The app also supports isolated working-tree and cloud-sandbox sessions. Those modes are useful for parallel work, but the local-repository mode keeps this guided exercise simple.
 
@@ -212,6 +221,8 @@ Inspect the live pull requests. Verify that all three are open, ready for review
 
 Practice a specific lower-layer change: add `priority: 'normal'` to every task and assert that default in `test/tasks.model.test.js`.
 
+In routine use, an approved `gh stack sync` performs the full fetch, reconcile, conditional rebase, push, and pull request and stack synchronization loop. This lab uses a different checkpointed branch-update path: rebase locally, run the tests, inspect every diff, and then approve the push. That split path does not reconcile local and remote stack definitions or update the remote stack object.
+
 <p align="center">
   <img src="images/feedback-cascade.webp" alt="A five-step flow for lower-layer feedback: update the model, cascade rebase, test the full stack, approve synchronization, and verify every live pull request." width="800">
 </p>
@@ -222,7 +233,7 @@ Practice a specific lower-layer change: add `priority: 'normal'` to every task a
 4. Inspect `gh stack view --json`
 5. Get approval before `gh stack rebase`
 6. Run the full tests from `tasks/api` and inspect every diff
-7. Get approval before `gh stack push` or `gh stack sync`
+7. Get approval before `gh stack push`
 8. Inspect every live pull request after the update
 
 Use `gh stack rebase --abort` if conflict resolution is uncertain. Stop rather than choosing a source of truth when local and remote stack definitions diverge.

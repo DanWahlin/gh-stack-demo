@@ -23,11 +23,13 @@ Selected command names, flags, status symbols, and behavioral claims are checked
 | Submit drafts non-interactively | `gh stack submit --auto` | Generates titles and creates new pull requests as drafts |
 | Mark the submitted stack ready | `gh stack submit --auto --open` | Marks new and existing pull requests ready for review |
 | Push existing branches | `gh stack push` | Uses per-branch force-with-lease checks; the update is not atomic, so some branches may update if another is rejected |
-| Synchronize branches and existing PRs | `gh stack sync` | Reconciles remote stack state, fast-forwards trunk when possible, rebases if trunk moved, atomically pushes active branches, and syncs existing PR and stack state; it never opens PRs |
+| Run the routine synchronization loop | `gh stack sync` | Reconciles remote stack state, fast-forwards trunk when possible, cascade-rebases stale branches, atomically pushes active branches, and syncs existing PR and stack state; it never opens PRs |
 | Prune merged local branches | `gh stack sync --prune` | Removes local branches for merged PRs |
-| Fetch and rebase locally | `gh stack rebase` | Fetches the remote, then cascade-rebases the stack without pushing or syncing PR state |
+| Fetch and rebase locally | `gh stack rebase` | Fetches current PR metadata and the remote, then cascade-rebases the stack without pushing branches or updating the remote stack object |
 | Abort a conflicted rebase | `gh stack rebase --abort` | Restores branches to their original state |
 | Continue after resolution | `gh stack rebase --continue` | Continues the active stack rebase |
+
+Use `gh stack sync` when you want the complete fetch → reconcile → rebase → push → PR/stack update loop in one command. Use `gh stack rebase` followed by tests, diff inspection, and `gh stack push` when you need a checkpoint before changing remote branches or when resolving conflicts.
 
 ## Merge
 

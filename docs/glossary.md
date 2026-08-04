@@ -40,6 +40,10 @@ A field in `gh stack view --json`. A value of `true` means the branch is no long
 
 A linear chain of dependent branches and pull requests.
 
+## Synchronization
+
+The routine one-command workflow performed by `gh stack sync`: fetch and reconcile remote state, fast-forward trunk when possible, cascade-rebase stale branches, push active branches, and synchronize existing pull request and stack state. It does not open pull requests.
+
 ## Trunk
 
 The branch below the entire stack, usually `main`.

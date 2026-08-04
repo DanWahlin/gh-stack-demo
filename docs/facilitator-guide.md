@@ -53,21 +53,21 @@ Open the learner repository in a supported IDE and use agent mode from the repos
 Install GitHub's official `gh-stack` skill:
 
 ```sh
-gh skill install github/gh-stack
+gh skill install github/gh-stack gh-stack --agent github-copilot --scope user
 copilot skill list
 ```
 
-When prompted, choose the `gh-stack` skill, GitHub Copilot, and user scope so the learner repository stays clean.
+User scope makes the skill available to Copilot CLI and the GitHub Copilot app while keeping the learner repository clean.
 
 Then start Copilot CLI. Ask learners to run `/instructions`, the view for custom instruction files, and confirm that `AGENTS.md` is loaded. The skill provides reusable CLI expertise; `AGENTS.md` remains the authority for workshop boundaries and approvals.
 
-### [GitHub Copilot desktop app](https://github.com/features/ai/github-app)
+### [GitHub Copilot app](https://github.com/features/ai/github-app)
 
-Open the learner repository in the desktop app and start the workshop session in the **local repository**. Reference `@AGENTS.md` in the first prompt.
+Open the learner repository in the app and start the workshop session in the **local repository**. Confirm that `gh-stack` appears under **Settings → Skills**, then reference `@AGENTS.md` and `/gh-stack` in the first prompt.
 
 ### Other tools
 
-Other agentic coding tools are acceptable when they load the repository instructions, can run the required terminal commands, and respect the same approval boundaries.
+Other AI coding tools are acceptable when they load the repository instructions, can run the required terminal commands, and respect the same approval boundaries.
 
 ## Facilitator preflight
 
@@ -82,7 +82,7 @@ gh pr list --repo DanWahlin/learn-github-stacked-prs --state open --head tasks/v
 gh pr list --repo DanWahlin/learn-github-stacked-prs --state open --head tasks/api --json number,baseRefName,headRefName,files
 ```
 
-For a GitHub Copilot CLI session, also run `copilot skill list` and confirm that `gh-stack` appears.
+For a GitHub Copilot CLI session, also run `copilot skill list` and confirm that `gh-stack` appears. The official skill is invoked as `/gh-stack`. `/pr-stack` is not supplied by `github/gh-stack`; if it appears, inspect **Settings → Skills** because it may come from a separate custom or third-party skill.
 
 Verify that the canonical pull requests are open, ready for review, and focused. Rehearse the workshop prompts in one build-mode repository. Agent wording can vary; evaluate the output against the rubric.
 
@@ -133,6 +133,10 @@ Stop. Agree whether local or GitHub state is authoritative before running anothe
 ### Why not open every pull request against `main`?
 
 Higher pull requests would include lower-layer changes. Targeting the branch below isolates each review boundary.
+
+### How do I keep the stack current when a lower branch changes?
+
+Run `gh stack view --json` to inspect branch order and `needsRebase`. For routine synchronization, `gh stack sync` performs the full fetch, reconcile, conditional rebase, push, and pull request and stack synchronization loop. The workshop instead uses a checkpointed branch-update workflow: `gh stack rebase`, tests and diff inspection, then `gh stack push`. That path keeps a review checkpoint before changing remote branches, but it does not reconcile local and remote stack definitions or update the remote stack object.
 
 ### Does every layer need tests?
 

@@ -33,6 +33,8 @@ Each pull request shows only the diff for its layer, while work can continue on 
 
 Merge the lowest unmerged pull request by itself, or select a higher pull request to merge it and every unmerged layer below it. A mid-stack pull request cannot merge by itself.
 
+If trunk or a lower layer advances, `gh stack view --json` reports which branches need a rebase. For routine synchronization, `gh stack sync` performs the full loop: it fetches and reconciles remote state, fast-forwards trunk when possible, cascade-rebases stale branches, pushes the updated branches, and synchronizes pull request and stack state. It never opens pull requests. Use `gh stack rebase` followed by `gh stack push` when you want to test and inspect locally before updating the remote stack.
+
 ### Decide whether to use a stack
 
 ```mermaid
@@ -117,7 +119,7 @@ The workshop supports:
 
 Other AI coding tools may be used after verifying that they load `AGENTS.md`, operate in the intended local repository, and can run Git, GitHub CLI, tests, and `gh stack`.
 
-For the GitHub Copilot CLI path, install GitHub's official `gh-stack` agent skill at user scope before starting the workshop:
+For the GitHub Copilot CLI or app path, install GitHub's official `gh-stack` agent skill at user scope before starting the workshop:
 
 ```sh
 gh skill install github/gh-stack gh-stack --agent github-copilot --scope user

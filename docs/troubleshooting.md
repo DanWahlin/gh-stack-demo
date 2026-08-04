@@ -13,7 +13,7 @@ Commit or stash work before rebasing or synchronizing.
 | Symptom | Likely cause | Diagnostic | Recovery |
 | --- | --- | --- | --- |
 | A PR shows unrelated files | Incorrect base or stale parent branch | Inspect `baseRefName`, `headRefName`, and the Files changed tab | Correct the stack relationship, rebase, then verify before pushing |
-| A branch shows `needsRebase` | Trunk or a lower layer advanced | Run `gh stack view --json` | Get approval before `gh stack rebase`; test and verify every diff before any push |
+| A branch shows `needsRebase` | Trunk or a lower layer advanced | Run `gh stack view --json` | For an approved routine one-shot update, run `gh stack sync`; when a local checkpoint is required, run `gh stack rebase`, test and inspect every diff, then approve `gh stack push` |
 | A PR was created as a draft | `--auto` was used without `--open` | Inspect the PR draft state | Run `gh stack submit --auto --open` after approval to mark the stack ready |
 | A command asks an unexpected question | The command is interactive, state is ambiguous, or local and remote definitions differ | Read the complete prompt without selecting an option | Stop and ask the stack owner to approve a specific choice; do not guess in automation |
 | A branch is missing from the stack | The branch was created outside the stack or metadata is absent | Compare `git branch` with `gh stack view --json` | Adopt existing branches with `gh stack init` in bottom-to-top order |

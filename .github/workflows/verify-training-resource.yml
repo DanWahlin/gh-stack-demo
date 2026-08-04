@@ -14,7 +14,6 @@ on:
       - "package.json"
       - "src/**"
       - "test/**"
-      - "github-stacked-prs.pptx"
       - ".github/workflows/verify-training-resource.yml"
   push:
     branches: [main]
@@ -27,7 +26,6 @@ on:
       - "package.json"
       - "src/**"
       - "test/**"
-      - "github-stacked-prs.pptx"
       - ".github/workflows/verify-training-resource.yml"
 
 permissions:
@@ -50,9 +48,6 @@ jobs:
 
       - name: Check documentation
         run: python scripts/check-docs.py
-
-      - name: Check presentation contract
-        run: python scripts/check-presentation.py
 
       - name: Check workshop copy script
         run: |

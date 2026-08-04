@@ -215,7 +215,7 @@ Use slide 6 and open the existing learner repository.
 Reference `@AGENTS.md`, then start with:
 
 ```text
-Read AGENTS.md. Do not modify files.
+Use the /gh-stack skill. Read AGENTS.md. Do not modify files.
 
 Summarize when to use one stack, which operations require approval,
 and what evidence you must return before submitting pull requests.
